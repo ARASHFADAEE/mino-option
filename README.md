@@ -114,6 +114,7 @@ Unit tests use WordPress stubs (no full WP install required). A full WordPress P
 
 ## Documentation
 
+- **[Developer & Agent Guide](docs/developer-guide.md)** — راهنمای کامل استفاده در افزونه/قالب (برای برنامه‌نویس و ایجنت)
 - [Getting started](docs/getting-started.md)
 - [Architecture](docs/architecture.md)
 - [Field types](docs/field-types.md)

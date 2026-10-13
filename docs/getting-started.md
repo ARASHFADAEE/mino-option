@@ -1,5 +1,9 @@
 # Getting started
 
+برای راهنمای کامل برنامه‌نویس/ایجنت (قوانین، schema، الگوهای افزونه و قالب) ببینید:
+
+**[developer-guide.md](developer-guide.md)**
+
 ## Requirements
 
 - PHP **7.4+**
