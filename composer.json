@@ -1,0 +1,36 @@
+{
+  "name": "arash/settings-framework",
+  "description": "Production-ready reusable WordPress settings framework.",
+  "type": "wordpress-plugin",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Arash Fadaee"
+    }
+  ],
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "Arash\\SettingsFramework\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Arash\\SettingsFramework\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "bash bin/run-tests.sh",
+    "lint": "php -l arash-settings-framework.php && find src examples tests -name '*.php' -print0 | xargs -0 -n1 php -l"
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "config": {
+    "sort-packages": true
+  }
+}

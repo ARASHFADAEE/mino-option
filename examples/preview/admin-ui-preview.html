@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>ASF UI Preview — Arash Settings Framework</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/fontawesome.min.css" disabled />
+	<!-- Dashicons stand-in + WP admin chrome -->
+	<style>
+		@import url("https://s.w.org/wp-includes/css/dashicons.min.css");
+
+		* { box-sizing: border-box; }
+		body {
+			margin: 0;
+			font-family: Tahoma, "Segoe UI", system-ui, sans-serif;
+			background: #f0f0f1;
+			color: #1d2327;
+		}
+		.wp-fake-admin {
+			display: grid;
+			grid-template-columns: 160px 1fr;
+			min-height: 100vh;
+		}
+		.wp-fake-menu {
+			background: #1d2327;
+			color: #f0f0f1;
+			padding: 12px 0;
+		}
+		.wp-fake-menu .brand {
+			padding: 8px 16px 20px;
+			font-weight: 700;
+			font-size: 13px;
+			opacity: 0.85;
+		}
+		.wp-fake-menu a {
+			display: block;
+			padding: 10px 16px;
+			color: #f0f0f1;
+			text-decoration: none;
+			font-size: 13px;
+			opacity: 0.75;
+		}
+		.wp-fake-menu a.active {
+			background: #2271b1;
+			opacity: 1;
+		}
+		.wp-fake-content {
+			padding: 20px 24px 40px;
+		}
+		.preview-bar {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			align-items: center;
+			margin-bottom: 16px;
+			padding: 10px 14px;
+			background: #fff;
+			border: 1px solid #c3c4c7;
+			border-radius: 6px;
+		}
+		.preview-bar strong { margin-inline-end: 8px; }
+		.preview-bar button {
+			border: 1px solid #c3c4c7;
+			background: #f6f7f7;
+			padding: 6px 12px;
+			border-radius: 4px;
+			cursor: pointer;
+			font: inherit;
+		}
+		.preview-bar button.is-on {
+			background: #1a6f5b;
+			border-color: #145a4a;
+			color: #fff;
+		}
+		/* Minimal WP notice / button stubs used by template */
+		.notice { padding: 8px 12px; margin: 0 0 12px; border-inline-start: 4px solid #72aee6; background: #fff; }
+		.notice-success { border-inline-start-color: #00a32a; }
+		.notice-error { border-inline-start-color: #d63638; }
+		.button {
+			display: inline-block;
+			padding: 6px 12px;
+			border: 1px solid #c3c4c7;
+			border-radius: 3px;
+			background: #f6f7f7;
+			color: #2c3338;
+			text-decoration: none;
+			cursor: pointer;
+			font: inherit;
+			line-height: 1.4;
+		}
+		.button-primary {
+			background: #2271b1;
+			border-color: #2271b1;
+			color: #fff;
+		}
+		.button-link {
+			background: none;
+			border: 0;
+			color: #2271b1;
+			cursor: pointer;
+			padding: 0;
+			font: inherit;
+		}
+		.screen-reader-text {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+			clip: rect(0,0,0,0);
+		}
+		.wp-heading-inline { display: inline; }
+		@media (max-width: 782px) {
+			.wp-fake-admin { grid-template-columns: 1fr; }
+			.wp-fake-menu { display: none; }
+		}
+	</style>
+	<link rel="stylesheet" href="../../assets/css/admin.css" />
+</head>
+<body>
+	<div class="wp-fake-admin">
+		<aside class="wp-fake-menu" aria-hidden="true">
+			<div class="brand">WordPress</div>
+			<a href="#">داشبورد</a>
+			<a href="#" class="active">ASF Example</a>
+			<a href="#">افزونه‌ها</a>
+			<a href="#">تنظیمات</a>
+		</aside>
+
+		<main class="wp-fake-content">
+			<div class="preview-bar">
+				<strong>پیش‌نمایش استایل ASF</strong>
+				<button type="button" id="btn-rtl" class="is-on">RTL فارسی</button>
+				<button type="button" id="btn-ltr">LTR English</button>
+				<span style="color:#646970;font-size:13px;">این صفحه فقط برای بررسی UI است — داده واقعی ذخیره نمی‌شود.</span>
+			</div>
+
+			<div class="wrap asf-settings" id="asf-settings-preview" data-asf-page="asf_example">
+				<header class="asf-header">
+					<div class="asf-header-brand">
+						<span class="asf-logo-mark" aria-hidden="true"></span>
+						<div class="asf-header-text">
+							<h1 class="asf-title" data-i18n="title">نمونه تنظیمات ASF</h1>
+							<p class="asf-subtitle" data-i18n="subtitle">صفحه تنظیمات حرفه‌ای با فریم‌ورک Arash Settings</p>
+						</div>
+					</div>
+					<span class="asf-version">v1.0.0</span>
+				</header>
+
+				<div class="notice notice-success asf-flash">
+					<p data-i18n="saved">تنظیمات ذخیره شد.</p>
+				</div>
+
+				<div class="asf-layout">
+					<nav class="asf-tabs" role="tablist" aria-label="Settings sections">
+						<a href="#general" class="asf-tab is-active" role="tab" aria-selected="true" data-asf-tab="general">
+							<span class="dashicons dashicons-admin-home" aria-hidden="true"></span>
+							<span class="asf-tab-label">
+								<span class="asf-tab-title" data-i18n="tab-general">عمومی</span>
+								<span class="asf-tab-desc" data-i18n="tab-general-desc">گزینه‌های اصلی</span>
+							</span>
+						</a>
+						<a href="#appearance" class="asf-tab" role="tab" aria-selected="false" data-asf-tab="appearance">
+							<span class="dashicons dashicons-admin-appearance" aria-hidden="true"></span>
+							<span class="asf-tab-label">
+								<span class="asf-tab-title" data-i18n="tab-appearance">ظاهر</span>
+								<span class="asf-tab-desc" data-i18n="tab-appearance-desc">رنگ و رسانه</span>
+							</span>
+						</a>
+						<a href="#storage" class="asf-tab" role="tab" aria-selected="false" data-asf-tab="storage">
+							<span class="dashicons dashicons-cloud" aria-hidden="true"></span>
+							<span class="asf-tab-label">
+								<span class="asf-tab-title" data-i18n="tab-storage">ذخیره‌سازی</span>
+								<span class="asf-tab-desc" data-i18n="tab-storage-desc">شرطی و ریموت</span>
+							</span>
+						</a>
+						<a href="#social" class="asf-tab" role="tab" aria-selected="false" data-asf-tab="social">
+							<span class="dashicons dashicons-share" aria-hidden="true"></span>
+							<span class="asf-tab-label">
+								<span class="asf-tab-title" data-i18n="tab-social">شبکه‌ها</span>
+								<span class="asf-tab-desc" data-i18n="tab-social-desc">ریپیتر</span>
+							</span>
+						</a>
+					</nav>
+
+					<div class="asf-panels">
+						<!-- GENERAL -->
+						<section class="asf-panel is-active" role="tabpanel" data-asf-panel="general" id="asf-panel-general">
+							<form class="asf-form" onsubmit="return false;">
+								<div class="asf-fields">
+									<div class="asf-field asf-field--switch" data-asf-field="enable_feature">
+										<label class="asf-field-label" for="enable_feature">فعال‌سازی قابلیت</label>
+										<div class="asf-field-control">
+											<button type="button" class="asf-switch is-on" role="switch" aria-checked="true" data-asf-switch id="enable_feature-btn">
+												<span class="asf-switch-track" aria-hidden="true"><span class="asf-switch-thumb"></span></span>
+												<span class="screen-reader-text">Enable</span>
+											</button>
+											<input type="hidden" class="asf-switch-input" name="enable_feature" id="enable_feature" value="1" />
+										</div>
+										<p class="asf-field-description">با روشن کردن این گزینه، فیلدهای وابسته نمایش داده می‌شوند.</p>
+									</div>
+
+									<div class="asf-field asf-field--url" data-asf-field="api_endpoint" data-asf-require='[["enable_feature","==",true]]'>
+										<label class="asf-field-label" for="api_endpoint">آدرس API</label>
+										<div class="asf-field-control">
+											<input class="asf-input" type="url" id="api_endpoint" name="api_endpoint" placeholder="https://api.example.com" value="https://api.example.com/v1" />
+										</div>
+										<p class="asf-field-description">فقط وقتی قابلیت فعال باشد دیده می‌شود.</p>
+									</div>
+
+									<div class="asf-field asf-field--email" data-asf-field="contact_email">
+										<label class="asf-field-label" for="contact_email">ایمیل تماس</label>
+										<div class="asf-field-control">
+											<input class="asf-input" type="email" id="contact_email" name="contact_email" value="hello@example.com" />
+										</div>
+									</div>
+
+									<div class="asf-field asf-field--buttonset" data-asf-field="mode">
+										<label class="asf-field-label">حالت</label>
+										<div class="asf-field-control">
+											<div class="asf-buttonset" role="radiogroup">
+												<label class="asf-buttonset-item" for="mode-live">
+													<input type="radio" class="asf-buttonset-input" id="mode-live" name="mode" value="live" />
+													<span>Live</span>
+												</label>
+												<label class="asf-buttonset-item is-active" for="mode-sandbox">
+													<input type="radio" class="asf-buttonset-input" id="mode-sandbox" name="mode" value="sandbox" checked />
+													<span>Sandbox</span>
+												</label>
+											</div>
+										</div>
+									</div>
+
+									<div class="asf-field asf-field--select" data-asf-field="role">
+										<label class="asf-field-label" for="role">نقش پیش‌فرض</label>
+										<div class="asf-field-control">
+											<select class="asf-select" id="role" name="role">
+												<option>Administrator</option>
+												<option selected>Editor</option>
+												<option>Author</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="asf-field asf-field--textarea" data-asf-field="notes">
+										<label class="asf-field-label" for="notes">یادداشت</label>
+										<div class="asf-field-control">
+											<textarea class="asf-textarea" id="notes" rows="4" placeholder="توضیحات اضافی…">متن نمونه برای بررسی تایپوگرافی و فاصله‌ها.</textarea>
+										</div>
+									</div>
+								</div>
+
+								<footer class="asf-actions">
+									<button type="submit" class="button button-primary asf-save">ذخیره تغییرات</button>
+									<button type="button" class="button asf-reset" data-asf-reset>بازنشانی به پیش‌فرض</button>
+									<span class="asf-save-status" aria-live="polite"></span>
+								</footer>
+							</form>
+						</section>
+
+						<!-- APPEARANCE -->
+						<section class="asf-panel" role="tabpanel" data-asf-panel="appearance" id="asf-panel-appearance" hidden>
+							<form class="asf-form" onsubmit="return false;">
+								<div class="asf-fields">
+									<div class="asf-field asf-field--color" data-asf-field="primary_color">
+										<label class="asf-field-label" for="primary_color">رنگ اصلی</label>
+										<div class="asf-field-control">
+											<input class="asf-input asf-color-picker" type="color" id="primary_color" value="#1a6f5b" style="max-width:64px;padding:2px;height:36px;" />
+										</div>
+									</div>
+
+									<div class="asf-field asf-field--image" data-asf-field="logo">
+										<label class="asf-field-label">لوگو</label>
+										<div class="asf-field-control">
+											<div class="asf-media" data-asf-media>
+												<input type="hidden" class="asf-media-id" value="0" />
+												<div class="asf-media-preview">
+													<span class="asf-media-empty">No file selected</span>
+												</div>
+												<div class="asf-media-actions">
+													<button type="button" class="button asf-media-select">Select</button>
+													<button type="button" class="button asf-media-remove" disabled>Remove</button>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="asf-field asf-field--notice">
+										<div class="asf-field-control">
+											<div class="asf-notice asf-notice--info" role="status">
+												<p>این تب برای بررسی فیلدهای رنگ و رسانه است.</p>
+											</div>
+										</div>
+									</div>
+
+									<div class="asf-field asf-field--heading">
+										<div class="asf-field-control">
+											<h3 class="asf-heading">بخش برندینگ</h3>
+											<p class="asf-heading-desc">Heading و Notice بدون ذخیره‌سازی</p>
+										</div>
+									</div>
+								</div>
+								<footer class="asf-actions">
+									<button type="submit" class="button button-primary asf-save">ذخیره تغییرات</button>
+								</footer>
+							</form>
+						</section>
+
+						<!-- STORAGE -->
+						<section class="asf-panel" role="tabpanel" data-asf-panel="storage" id="asf-panel-storage" hidden>
+							<form class="asf-form" onsubmit="return false;">
+								<div class="asf-fields">
+									<div class="asf-field asf-field--switch" data-asf-field="enable_remote_storage">
+										<label class="asf-field-label">ذخیره ریموت</label>
+										<div class="asf-field-control">
+											<button type="button" class="asf-switch" role="switch" aria-checked="false" data-asf-switch>
+												<span class="asf-switch-track"><span class="asf-switch-thumb"></span></span>
+											</button>
+											<input type="hidden" class="asf-switch-input" name="enable_remote_storage" id="enable_remote_storage" value="0" />
+										</div>
+									</div>
+									<div class="asf-field asf-field--select" data-asf-field="storage_provider" data-asf-require='[["enable_remote_storage","==",true]]'>
+										<label class="asf-field-label" for="storage_provider">Provider</label>
+										<div class="asf-field-control">
+											<select class="asf-select" id="storage_provider" name="storage_provider">
+												<option value="s3">Amazon S3</option>
+												<option value="liara">Liara</option>
+												<option value="minio">MinIO</option>
+											</select>
+										</div>
+									</div>
+									<div class="asf-field asf-field--text is-hidden" data-asf-field="bucket" data-asf-require='{"relation":"AND","0":["enable_remote_storage","==",true],"1":["storage_provider","in",["s3","minio","liara"]]}'>
+										<label class="asf-field-label" for="bucket">Bucket</label>
+										<div class="asf-field-control">
+											<input class="asf-input" id="bucket" name="bucket" value="my-bucket" />
+										</div>
+									</div>
+								</div>
+								<footer class="asf-actions">
+									<button type="submit" class="button button-primary asf-save">ذخیره تغییرات</button>
+								</footer>
+							</form>
+						</section>
+
+						<!-- SOCIAL / REPEATER -->
+						<section class="asf-panel" role="tabpanel" data-asf-panel="social" id="asf-panel-social" hidden>
+							<form class="asf-form" onsubmit="return false;">
+								<div class="asf-fields">
+									<div class="asf-field asf-field--repeater" data-asf-field="social_networks">
+										<label class="asf-field-label">شبکه‌های اجتماعی</label>
+										<div class="asf-field-control">
+											<div class="asf-repeater" data-asf-repeater data-name="social_networks" data-min="0" data-max="10">
+												<div class="asf-repeater-rows" data-asf-repeater-rows>
+													<div class="asf-repeater-row" data-asf-repeater-row>
+														<div class="asf-repeater-row-header">
+															<button type="button" class="asf-repeater-handle button-link" aria-label="Drag">
+																<span class="dashicons dashicons-menu"></span>
+															</button>
+															<span class="asf-repeater-row-label">Item 1</span>
+															<div class="asf-repeater-row-actions">
+																<button type="button" class="button-link asf-repeater-duplicate">Duplicate</button>
+																<button type="button" class="button-link asf-repeater-remove">Remove</button>
+															</div>
+														</div>
+														<div class="asf-repeater-row-body">
+															<div class="asf-field asf-field--text">
+																<label class="asf-field-label">نام شبکه</label>
+																<div class="asf-field-control">
+																	<input class="asf-input" name="social_networks[0][network_name]" value="Telegram" />
+																</div>
+															</div>
+															<div class="asf-field asf-field--url">
+																<label class="asf-field-label">URL</label>
+																<div class="asf-field-control">
+																	<input class="asf-input" name="social_networks[0][network_url]" value="https://t.me/example" />
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<template class="asf-repeater-template"></template>
+												<div class="asf-repeater-toolbar">
+													<button type="button" class="button button-secondary asf-repeater-add">Add row</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<footer class="asf-actions">
+									<button type="submit" class="button button-primary asf-save">ذخیره تغییرات</button>
+								</footer>
+							</form>
+						</section>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+
+	<script>
+		window.asfAdmin = {
+			i18n: {
+				confirmReset: 'بازنشانی همه تنظیمات؟',
+				selectMedia: 'انتخاب رسانه',
+				useMedia: 'استفاده',
+				noFile: 'فایلی انتخاب نشده'
+			},
+			rtl: true
+		};
+	</script>
+	<script src="../../assets/js/admin.js"></script>
+	<script>
+		(function () {
+			var html = document.documentElement;
+			var btnRtl = document.getElementById('btn-rtl');
+			var btnLtr = document.getElementById('btn-ltr');
+
+			function setDir(dir) {
+				html.setAttribute('dir', dir);
+				html.setAttribute('lang', dir === 'rtl' ? 'fa' : 'en');
+				btnRtl.classList.toggle('is-on', dir === 'rtl');
+				btnLtr.classList.toggle('is-on', dir === 'ltr');
+				window.asfAdmin.rtl = dir === 'rtl';
+			}
+
+			btnRtl.addEventListener('click', function () { setDir('rtl'); });
+			btnLtr.addEventListener('click', function () { setDir('ltr'); });
+
+			// Preview-only media stub (no wp.media)
+			document.querySelectorAll('.asf-media-select').forEach(function (btn) {
+				btn.addEventListener('click', function () {
+					var wrap = btn.closest('.asf-media');
+					var preview = wrap.querySelector('.asf-media-preview');
+					var input = wrap.querySelector('.asf-media-id');
+					input.value = '1';
+					preview.innerHTML = '<div style="width:72px;height:72px;border-radius:4px;background:linear-gradient(135deg,#1a6f5b,#2a8f74);"></div>';
+					wrap.querySelector('.asf-media-remove').disabled = false;
+				});
+			});
+		})();
+	</script>
+</body>
+</html>
