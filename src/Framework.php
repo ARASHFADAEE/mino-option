@@ -62,6 +62,7 @@ final class Framework {
 		add_action( 'admin_menu', array( MenuRegistrar::class, 'register' ), 20 );
 		add_action( 'admin_enqueue_scripts', array( AssetManager::class, 'enqueue' ), 20 );
 		add_action( 'admin_init', array( SaveHandler::class, 'maybe_handle' ), 5 );
+		add_action( 'wp_ajax_' . SaveHandler::AJAX_ACTION, array( SaveHandler::class, 'ajax_handle' ) );
 		add_action( 'admin_notices', array( $this, 'maybe_show_version_conflict' ) );
 
 		/**

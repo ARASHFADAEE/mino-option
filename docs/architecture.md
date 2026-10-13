@@ -29,7 +29,7 @@ Arash Settings Framework (ASF) is a namespaced, modular WordPress settings toolk
 4. Consumer plugins call `Settings::register_page()` / `register_tab()` on `plugins_loaded` (or earlier).
 5. On `admin_menu`, menus are created from the registry.
 6. On `admin_enqueue_scripts`, assets load only when `$_GET['page']` matches a registered slug.
-7. On `admin_init`, `SaveHandler` processes authorized POST saves/resets.
+7. On save, the admin UI posts via AJAX (`asf_save_settings`) with a glass loading overlay; `admin_init` still accepts classic POST as a no-JS fallback.
 
 ## Multi-instance strategy
 

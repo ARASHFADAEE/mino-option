@@ -25,6 +25,14 @@ if ( false !== $notice ) {
 }
 ?>
 <div class="wrap asf-settings" id="asf-settings-<?php echo esc_attr( $page_id ); ?>" data-asf-page="<?php echo esc_attr( $page_id ); ?>">
+	<div class="asf-loading-overlay" hidden aria-hidden="true">
+		<div class="asf-loader" role="status" aria-live="polite">
+			<span class="asf-loader-spinner" aria-hidden="true"></span>
+			<span class="asf-loader-text"><?php esc_html_e( 'Saving settings…', 'arash-settings-framework' ); ?></span>
+		</div>
+	</div>
+	<div class="asf-toast" hidden role="status" aria-live="polite"></div>
+
 	<header class="asf-header">
 		<div class="asf-header-brand">
 			<?php if ( ! empty( $page['logo'] ) ) : ?>

@@ -11,8 +11,10 @@ namespace Arash\SettingsFramework\Assets;
 
 defined( 'ABSPATH' ) || exit;
 
+use Arash\SettingsFramework\Admin\SaveHandler;
 use Arash\SettingsFramework\Fields\FieldTypeRegistry;
 use Arash\SettingsFramework\Registry\PageRegistry;
+use Arash\SettingsFramework\Security\RequestGuard;
 
 /**
  * Enqueues CSS/JS only on registered ASF admin pages.
@@ -73,14 +75,22 @@ final class AssetManager {
 			'asf-admin',
 			'asfAdmin',
 			array(
-				'pageId'  => $page_id,
-				'i18n'    => array(
+				'pageId'   => $page_id,
+				'ajaxUrl'  => admin_url( 'admin-ajax.php' ),
+				'ajaxAction' => SaveHandler::AJAX_ACTION,
+				'nonce'    => wp_create_nonce( RequestGuard::nonce_action( $page_id ) ),
+				'i18n'     => array(
 					'confirmReset' => __( 'Reset all settings on this page to defaults? This cannot be undone.', 'arash-settings-framework' ),
 					'selectMedia'  => __( 'Select media', 'arash-settings-framework' ),
 					'useMedia'     => __( 'Use selection', 'arash-settings-framework' ),
 					'noFile'       => __( 'No file selected', 'arash-settings-framework' ),
+					'saving'       => __( 'Saving settings…', 'arash-settings-framework' ),
+					'resetting'    => __( 'Resetting settings…', 'arash-settings-framework' ),
+					'saved'        => __( 'Settings saved.', 'arash-settings-framework' ),
+					'resetDone'    => __( 'Settings reset to defaults.', 'arash-settings-framework' ),
+					'saveFailed'   => __( 'Save failed. Please try again.', 'arash-settings-framework' ),
 				),
-				'rtl'     => is_rtl(),
+				'rtl'      => is_rtl(),
 			)
 		);
 

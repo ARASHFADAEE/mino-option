@@ -126,7 +126,7 @@ Unit tests use WordPress stubs (no full WP install required). A full WordPress P
 - Nested repeaters (repeater inside repeater) are not implemented in v1.
 - Row-local conditional rules inside repeaters are best-effort in JS.
 - Editor fields inside repeater rows are not recommended (TinyMCE ID constraints).
-- No REST/AJAX save endpoint in v1 (POST + redirect only).
+- Nested TinyMCE editors inside repeater rows remain unsupported.
 - Gallery values are posted as comma-separated IDs.
 
 ## License

@@ -140,6 +140,14 @@
 			</div>
 
 			<div class="wrap asf-settings" id="asf-settings-preview" data-asf-page="asf_example">
+				<div class="asf-loading-overlay" hidden aria-hidden="true">
+					<div class="asf-loader" role="status" aria-live="polite">
+						<span class="asf-loader-spinner" aria-hidden="true"></span>
+						<span class="asf-loader-text">در حال ذخیره تنظیمات…</span>
+					</div>
+				</div>
+				<div class="asf-toast" hidden role="status" aria-live="polite"></div>
+
 				<header class="asf-header">
 					<div class="asf-header-brand">
 						<span class="asf-logo-mark" aria-hidden="true"></span>
@@ -430,11 +438,19 @@
 
 	<script>
 		window.asfAdmin = {
+			mockAjax: true,
+			ajaxUrl: '',
+			ajaxAction: 'asf_save_settings',
 			i18n: {
 				confirmReset: 'بازنشانی همه تنظیمات؟',
 				selectMedia: 'انتخاب رسانه',
 				useMedia: 'استفاده',
-				noFile: 'فایلی انتخاب نشده'
+				noFile: 'فایلی انتخاب نشده',
+				saving: 'در حال ذخیره تنظیمات…',
+				resetting: 'در حال بازنشانی…',
+				saved: 'تنظیمات ذخیره شد.',
+				resetDone: 'تنظیمات به حالت پیش‌فرض برگشت.',
+				saveFailed: 'ذخیره ناموفق بود.'
 			},
 			rtl: true
 		};

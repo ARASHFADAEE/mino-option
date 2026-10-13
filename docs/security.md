@@ -36,7 +36,9 @@
 
 ## CSRF
 
-WordPress nonces on every settings form. AJAX is not used for saves in v1 (standard POST + redirect).
+WordPress nonces on every settings form (`asf_nonce` / `asf_save_settings_{page_id}`).
+
+Primary write path is `admin-ajax.php` action `asf_save_settings` (capability + nonce). Classic POST + redirect remains as a no-JS fallback and reuses the same `SaveHandler::process_request()` pipeline.
 
 ## XSS
 

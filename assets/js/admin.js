@@ -463,13 +463,165 @@
 		});
 	}
 
-	function initReset(root) {
-		qa(root, '[data-asf-reset]').forEach(function (btn) {
-			btn.addEventListener('click', function (e) {
-				var msg = (cfg.i18n && cfg.i18n.confirmReset) || 'Reset all settings?';
-				if (!window.confirm(msg)) {
+	function ensureOverlay(root) {
+		var overlay = q(root, '.asf-loading-overlay');
+		if (overlay) return overlay;
+		overlay = document.createElement('div');
+		overlay.className = 'asf-loading-overlay';
+		overlay.hidden = true;
+		overlay.setAttribute('aria-hidden', 'true');
+		overlay.innerHTML =
+			'<div class="asf-loader" role="status" aria-live="polite">' +
+			'<span class="asf-loader-spinner" aria-hidden="true"></span>' +
+			'<span class="asf-loader-text"></span></div>';
+		root.insertBefore(overlay, root.firstChild);
+		return overlay;
+	}
+
+	function ensureToast(root) {
+		var toast = q(root, '.asf-toast');
+		if (toast) return toast;
+		toast = document.createElement('div');
+		toast.className = 'asf-toast';
+		toast.hidden = true;
+		toast.setAttribute('role', 'status');
+		toast.setAttribute('aria-live', 'polite');
+		root.insertBefore(toast, root.firstChild);
+		return toast;
+	}
+
+	function setLoading(root, on, label) {
+		var overlay = ensureOverlay(root);
+		var text = q(overlay, '.asf-loader-text');
+		if (text && label) text.textContent = label;
+		root.classList.toggle('is-loading', !!on);
+		root.setAttribute('aria-busy', on ? 'true' : 'false');
+		if (on) {
+			overlay.hidden = false;
+			overlay.setAttribute('aria-hidden', 'false');
+		} else {
+			overlay.hidden = true;
+			overlay.setAttribute('aria-hidden', 'true');
+		}
+	}
+
+	function showToast(root, message, type) {
+		var toast = ensureToast(root);
+		toast.textContent = message || '';
+		toast.className = 'asf-toast is-' + (type || 'success');
+		toast.hidden = false;
+		window.clearTimeout(toast._asfTimer);
+		toast._asfTimer = window.setTimeout(function () {
+			toast.hidden = true;
+		}, 3200);
+	}
+
+	function syncEditors(form) {
+		if (window.tinymce && typeof window.tinymce.triggerSave === 'function') {
+			window.tinymce.triggerSave();
+		}
+		qa(form, 'textarea.wp-editor-area').forEach(function (el) {
+			if (window.tinymce) {
+				var ed = window.tinymce.get(el.id);
+				if (ed) el.value = ed.getContent();
+			}
+		});
+	}
+
+	function parseAjaxResponse(raw) {
+		try {
+			return typeof raw === 'string' ? JSON.parse(raw) : raw;
+		} catch (e) {
+			return null;
+		}
+	}
+
+	function submitFormAjax(root, form, action) {
+		var i18n = cfg.i18n || {};
+		var loadingLabel = action === 'reset'
+			? (i18n.resetting || 'Resetting settings…')
+			: (i18n.saving || 'Saving settings…');
+
+		syncEditors(form);
+		setLoading(root, true, loadingLabel);
+
+		var data = new FormData(form);
+		data.set('asf_action', action);
+		data.set('action', cfg.ajaxAction || 'asf_save_settings');
+		if (cfg.nonce && !data.get('asf_nonce')) {
+			data.set('asf_nonce', cfg.nonce);
+		}
+
+		var url = cfg.ajaxUrl || (window.ajaxurl || '');
+		var mock = !!cfg.mockAjax || !url;
+
+		function finish(ok, payload) {
+			setLoading(root, false);
+			var message = (payload && payload.data && payload.data.message)
+				|| (payload && payload.message)
+				|| (ok
+					? (action === 'reset' ? (i18n.resetDone || 'Settings reset to defaults.') : (i18n.saved || 'Settings saved.'))
+					: (i18n.saveFailed || 'Save failed. Please try again.'));
+
+			if (!ok && payload && payload.data && payload.data.errors) {
+				var errs = payload.data.errors;
+				var list = Object.keys(errs).map(function (k) { return errs[k]; }).filter(Boolean);
+				if (list.length) message = list.join(' · ');
+			}
+
+			showToast(root, message, ok ? 'success' : 'error');
+
+			var flash = q(root, '.asf-flash');
+			if (flash && ok) {
+				flash.className = 'notice notice-success is-dismissible asf-flash';
+				flash.innerHTML = '<p>' + message.replace(/</g, '&lt;') + '</p>';
+			}
+		}
+
+		if (mock) {
+			window.setTimeout(function () {
+				finish(true, { success: true, data: { message: action === 'reset' ? i18n.resetDone : i18n.saved } });
+			}, 900);
+			return;
+		}
+
+		fetch(url, {
+			method: 'POST',
+			credentials: 'same-origin',
+			body: data
+		})
+			.then(function (res) {
+				return res.text().then(function (text) {
+					var json = parseAjaxResponse(text);
+					return { okHttp: res.ok, json: json, text: text };
+				});
+			})
+			.then(function (pack) {
+				var json = pack.json;
+				var ok = !!(json && json.success);
+				finish(ok, json || { message: pack.text });
+			})
+			.catch(function () {
+				finish(false, null);
+			});
+	}
+
+	function initAjaxForms(root) {
+		qa(root, 'form.asf-form').forEach(function (form) {
+			form.addEventListener('submit', function (e) {
+				e.preventDefault();
+				if (root.classList.contains('is-loading')) return;
+				submitFormAjax(root, form, 'save');
+			});
+
+			qa(form, '[data-asf-reset]').forEach(function (btn) {
+				btn.addEventListener('click', function (e) {
 					e.preventDefault();
-				}
+					if (root.classList.contains('is-loading')) return;
+					var msg = (cfg.i18n && cfg.i18n.confirmReset) || 'Reset all settings?';
+					if (!window.confirm(msg)) return;
+					submitFormAjax(root, form, 'reset');
+				});
 			});
 		});
 	}
@@ -485,11 +637,13 @@
 
 	ready(function () {
 		qa(document, '.asf-settings').forEach(function (root) {
+			ensureOverlay(root);
+			ensureToast(root);
 			initTabs(root);
 			initSwitches(root);
 			initMedia(root);
 			initRepeater(root);
-			initReset(root);
+			initAjaxForms(root);
 			initColor(root);
 			applyConditionals(root);
 
