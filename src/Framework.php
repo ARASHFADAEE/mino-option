@@ -2,21 +2,21 @@
 /**
  * Framework bootstrap singleton.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework;
+namespace Mino\Option;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Admin\MenuRegistrar;
-use Arash\SettingsFramework\Admin\SaveHandler;
-use Arash\SettingsFramework\Assets\AssetManager;
-use Arash\SettingsFramework\Fields\FieldTypeRegistry;
-use Arash\SettingsFramework\Registry\PageRegistry;
-use Arash\SettingsFramework\Storage\OptionStore;
+use Mino\Option\Admin\MenuRegistrar;
+use Mino\Option\Admin\SaveHandler;
+use Mino\Option\Assets\AssetManager;
+use Mino\Option\Fields\FieldTypeRegistry;
+use Mino\Option\Registry\PageRegistry;
+use Mino\Option\Storage\OptionStore;
 
 /**
  * Boots hooks once and exposes core services.
@@ -70,7 +70,7 @@ final class Framework {
 		 *
 		 * @param Framework $framework Framework instance.
 		 */
-		do_action( 'asf_booted', $this );
+		do_action( 'mino_booted', $this );
 	}
 
 	/**
@@ -106,9 +106,9 @@ final class Framework {
 	 */
 	public function load_textdomain(): void {
 		load_plugin_textdomain(
-			ASF_TEXTDOMAIN,
+			MINO_TEXTDOMAIN,
 			false,
-			dirname( plugin_basename( ASF_FILE ) ) . '/languages'
+			dirname( plugin_basename( MINO_FILE ) ) . '/languages'
 		);
 	}
 
@@ -124,7 +124,7 @@ final class Framework {
 			return;
 		}
 
-		$info = asf_loader_info();
+		$info = mino_loader_info();
 		if ( empty( $info['conflicts'] ) || ! is_array( $info['conflicts'] ) ) {
 			return;
 		}
@@ -136,7 +136,7 @@ final class Framework {
 			echo esc_html(
 				sprintf(
 					/* translators: 1: active version, 2: skipped version */
-					__( 'Arash Settings Framework: incompatible major version detected. Active %1$s; skipped %2$s. First loaded copy remains active.', 'arash-settings-framework' ),
+					__( 'Mino Option: incompatible major version detected. Active %1$s; skipped %2$s. First loaded copy remains active.', 'mino-option' ),
 					$active,
 					$attempt
 				)

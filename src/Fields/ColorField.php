@@ -2,16 +2,16 @@
 /**
  * Color picker field.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Fields;
+namespace Mino\Option\Fields;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Validation\Sanitizer;
+use Mino\Option\Validation\Sanitizer;
 
 /**
  * WordPress iris color picker.
@@ -49,7 +49,7 @@ final class ColorField extends AbstractField {
 			array(
 				'type'  => 'text',
 				'value' => (string) ( $value ?? '' ),
-				'class' => 'asf-color-picker',
+				'class' => 'mino-color-picker',
 			)
 		);
 		echo '<input' . $this->attributes( $attrs ) . ' data-default-color="' . esc_attr( (string) ( $field['default'] ?? '' ) ) . '" />';

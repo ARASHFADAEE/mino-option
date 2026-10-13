@@ -2,12 +2,12 @@
 /**
  * Repeater field.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Fields;
+namespace Mino\Option\Fields;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -115,28 +115,28 @@ final class RepeaterField extends AbstractField {
 		$registry = FieldTypeRegistry::instance();
 		?>
 		<div
-			class="asf-repeater"
-			data-asf-repeater
+			class="mino-repeater"
+			data-mino-repeater
 			data-name="<?php echo esc_attr( $name ); ?>"
 			data-min="<?php echo esc_attr( (string) $min ); ?>"
 			data-max="<?php echo esc_attr( (string) $max ); ?>"
 		>
-			<div class="asf-repeater-rows" data-asf-repeater-rows>
+			<div class="mino-repeater-rows" data-mino-repeater-rows>
 				<?php if ( empty( $rows ) ) : ?>
-					<p class="asf-repeater-empty"><?php esc_html_e( 'No items yet. Add a row to get started.', 'arash-settings-framework' ); ?></p>
+					<p class="mino-repeater-empty"><?php esc_html_e( 'No items yet. Add a row to get started.', 'mino-option' ); ?></p>
 				<?php endif; ?>
 				<?php foreach ( $rows as $index => $row ) : ?>
 					<?php $this->render_row( $field, $subfields, $row, $name, $id_base, (int) $index, $registry ); ?>
 				<?php endforeach; ?>
 			</div>
 
-			<template class="asf-repeater-template">
+			<template class="mino-repeater-template">
 				<?php $this->render_row( $field, $subfields, array(), $name, $id_base, '{{INDEX}}', $registry, true ); ?>
 			</template>
 
-			<div class="asf-repeater-toolbar">
-				<button type="button" class="button button-secondary asf-repeater-add">
-					<?php esc_html_e( 'Add row', 'arash-settings-framework' ); ?>
+			<div class="mino-repeater-toolbar">
+				<button type="button" class="button button-secondary mino-repeater-add">
+					<?php esc_html_e( 'Add row', 'mino-option' ); ?>
 				</button>
 			</div>
 		</div>
@@ -155,26 +155,26 @@ final class RepeaterField extends AbstractField {
 	 */
 	private function render_row( array $field, array $subfields, array $row, string $name, string $id_base, $index, FieldTypeRegistry $registry, bool $is_tpl = false ): void {
 		?>
-		<div class="asf-repeater-row" data-asf-repeater-row>
-			<div class="asf-repeater-row-header">
-				<button type="button" class="asf-repeater-handle button-link" aria-label="<?php esc_attr_e( 'Drag to reorder', 'arash-settings-framework' ); ?>">
+		<div class="mino-repeater-row" data-mino-repeater-row>
+			<div class="mino-repeater-row-header">
+				<button type="button" class="mino-repeater-handle button-link" aria-label="<?php esc_attr_e( 'Drag to reorder', 'mino-option' ); ?>">
 					<span class="dashicons dashicons-menu" aria-hidden="true"></span>
 				</button>
-				<span class="asf-repeater-row-label">
+				<span class="mino-repeater-row-label">
 					<?php
 					printf(
 						/* translators: %s: row number */
-						esc_html__( 'Item %s', 'arash-settings-framework' ),
+						esc_html__( 'Item %s', 'mino-option' ),
 						esc_html( (string) ( is_int( $index ) ? $index + 1 : $index ) )
 					);
 					?>
 				</span>
-				<div class="asf-repeater-row-actions">
-					<button type="button" class="button-link asf-repeater-duplicate"><?php esc_html_e( 'Duplicate', 'arash-settings-framework' ); ?></button>
-					<button type="button" class="button-link asf-repeater-remove"><?php esc_html_e( 'Remove', 'arash-settings-framework' ); ?></button>
+				<div class="mino-repeater-row-actions">
+					<button type="button" class="button-link mino-repeater-duplicate"><?php esc_html_e( 'Duplicate', 'mino-option' ); ?></button>
+					<button type="button" class="button-link mino-repeater-remove"><?php esc_html_e( 'Remove', 'mino-option' ); ?></button>
 				</div>
 			</div>
-			<div class="asf-repeater-row-body">
+			<div class="mino-repeater-row-body">
 				<?php foreach ( $subfields as $sub ) : ?>
 					<?php
 					$sid   = (string) $sub['id'];
@@ -185,16 +185,16 @@ final class RepeaterField extends AbstractField {
 					$dep     = ! empty( $sub['require'] ) ? $sub['require'] : ( $sub['dependency'] ?? array() );
 					?>
 					<div
-						class="asf-field asf-field--<?php echo esc_attr( (string) $sub['type'] ); ?>"
-						data-asf-field="<?php echo esc_attr( $sid ); ?>"
+						class="mino-field mino-field--<?php echo esc_attr( (string) $sub['type'] ); ?>"
+						data-mino-field="<?php echo esc_attr( $sid ); ?>"
 						<?php if ( ! empty( $dep ) ) : ?>
-							data-asf-require="<?php echo esc_attr( wp_json_encode( $dep ) ); ?>"
+							data-mino-require="<?php echo esc_attr( wp_json_encode( $dep ) ); ?>"
 						<?php endif; ?>
 					>
 						<?php if ( ! in_array( (string) $sub['type'], array( 'heading', 'notice', 'html', 'checkbox' ), true ) ) : ?>
-							<label class="asf-field-label" for="<?php echo esc_attr( $sid_h ); ?>"><?php echo esc_html( (string) $sub['title'] ); ?></label>
+							<label class="mino-field-label" for="<?php echo esc_attr( $sid_h ); ?>"><?php echo esc_html( (string) $sub['title'] ); ?></label>
 						<?php endif; ?>
-						<div class="asf-field-control">
+						<div class="mino-field-control">
 							<?php
 							if ( $handler ) {
 								$handler->render(
@@ -209,7 +209,7 @@ final class RepeaterField extends AbstractField {
 							?>
 						</div>
 						<?php if ( ! empty( $sub['description'] ) && 'notice' !== $sub['type'] ) : ?>
-							<p class="asf-field-description"><?php echo esc_html( (string) $sub['description'] ); ?></p>
+							<p class="mino-field-description"><?php echo esc_html( (string) $sub['description'] ); ?></p>
 						<?php endif; ?>
 					</div>
 				<?php endforeach; ?>

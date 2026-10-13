@@ -2,12 +2,12 @@
 /**
  * Informational notice (non-persistent).
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Fields;
+namespace Mino\Option\Fields;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -38,7 +38,7 @@ final class NoticeField extends AbstractField {
 		if ( ! in_array( $type, array( 'info', 'success', 'warning', 'error' ), true ) ) {
 			$type = 'info';
 		}
-		echo '<div class="asf-notice asf-notice--' . esc_attr( $type ) . '" role="status">';
+		echo '<div class="mino-notice mino-notice--' . esc_attr( $type ) . '" role="status">';
 		echo '<p>' . esc_html( (string) ( $field['description'] ?: $field['title'] ) ) . '</p>';
 		echo '</div>';
 	}

@@ -2,22 +2,22 @@
 /**
  * Conditional admin asset loading.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Assets;
+namespace Mino\Option\Assets;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Admin\SaveHandler;
-use Arash\SettingsFramework\Fields\FieldTypeRegistry;
-use Arash\SettingsFramework\Registry\PageRegistry;
-use Arash\SettingsFramework\Security\RequestGuard;
+use Mino\Option\Admin\SaveHandler;
+use Mino\Option\Fields\FieldTypeRegistry;
+use Mino\Option\Registry\PageRegistry;
+use Mino\Option\Security\RequestGuard;
 
 /**
- * Enqueues CSS/JS only on registered ASF admin pages.
+ * Enqueues CSS/JS only on registered Mino Option admin pages.
  */
 final class AssetManager {
 
@@ -32,19 +32,19 @@ final class AssetManager {
 
 		$fields  = PageRegistry::instance()->get_fields( $page_id );
 		$needed  = FieldTypeRegistry::instance()->collect_assets( $fields );
-		$version = defined( 'ASF_VERSION' ) ? ASF_VERSION : '1.0.0';
+		$version = defined( 'MINO_VERSION' ) ? MINO_VERSION : '1.0.0';
 
 		wp_enqueue_style(
-			'asf-peyda',
-			ASF_URL . 'assets/fonts/peyda/fontiran.css',
+			'mino-peyda',
+			MINO_URL . 'assets/fonts/peyda/fontiran.css',
 			array(),
 			$version
 		);
 
 		wp_enqueue_style(
-			'asf-admin',
-			ASF_URL . 'assets/css/admin.css',
-			array( 'dashicons', 'asf-peyda' ),
+			'mino-admin',
+			MINO_URL . 'assets/css/admin.css',
+			array( 'dashicons', 'mino-peyda' ),
 			$version
 		);
 
@@ -64,48 +64,48 @@ final class AssetManager {
 		}
 
 		wp_enqueue_script(
-			'asf-admin',
-			ASF_URL . 'assets/js/admin.js',
+			'mino-admin',
+			MINO_URL . 'assets/js/admin.js',
 			$deps,
 			$version,
 			true
 		);
 
 		wp_localize_script(
-			'asf-admin',
-			'asfAdmin',
+			'mino-admin',
+			'minoAdmin',
 			array(
 				'pageId'   => $page_id,
 				'ajaxUrl'  => admin_url( 'admin-ajax.php' ),
 				'ajaxAction' => SaveHandler::AJAX_ACTION,
 				'nonce'    => wp_create_nonce( RequestGuard::nonce_action( $page_id ) ),
 				'i18n'     => array(
-					'confirmReset' => __( 'Reset all settings on this page to defaults? This cannot be undone.', 'arash-settings-framework' ),
-					'selectMedia'  => __( 'Select media', 'arash-settings-framework' ),
-					'useMedia'     => __( 'Use selection', 'arash-settings-framework' ),
-					'noFile'       => __( 'No file selected', 'arash-settings-framework' ),
-					'saving'       => __( 'Saving settings…', 'arash-settings-framework' ),
-					'resetting'    => __( 'Resetting settings…', 'arash-settings-framework' ),
-					'saved'        => __( 'Settings saved.', 'arash-settings-framework' ),
-					'resetDone'    => __( 'Settings reset to defaults.', 'arash-settings-framework' ),
-					'saveFailed'   => __( 'Save failed. Please try again.', 'arash-settings-framework' ),
+					'confirmReset' => __( 'Reset all settings on this page to defaults? This cannot be undone.', 'mino-option' ),
+					'selectMedia'  => __( 'Select media', 'mino-option' ),
+					'useMedia'     => __( 'Use selection', 'mino-option' ),
+					'noFile'       => __( 'No file selected', 'mino-option' ),
+					'saving'       => __( 'Saving settings…', 'mino-option' ),
+					'resetting'    => __( 'Resetting settings…', 'mino-option' ),
+					'saved'        => __( 'Settings saved.', 'mino-option' ),
+					'resetDone'    => __( 'Settings reset to defaults.', 'mino-option' ),
+					'saveFailed'   => __( 'Save failed. Please try again.', 'mino-option' ),
 				),
 				'rtl'      => is_rtl(),
 			)
 		);
 
 		/**
-		 * Fires after ASF assets are enqueued for a page.
+		 * Fires after Mino Option assets are enqueued for a page.
 		 *
 		 * @param string $page_id     Page ID.
 		 * @param array  $needed      Asset tags.
 		 * @param string $hook_suffix Hook.
 		 */
-		do_action( 'asf_enqueue_assets', $page_id, $needed, $hook_suffix );
+		do_action( 'mino_enqueue_assets', $page_id, $needed, $hook_suffix );
 	}
 
 	/**
-	 * Detect which ASF page is being viewed.
+	 * Detect which Mino Option page is being viewed.
 	 */
 	private static function detect_page_id(): ?string {
 		if ( empty( $_GET['page'] ) ) {

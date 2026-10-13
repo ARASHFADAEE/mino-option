@@ -2,16 +2,16 @@
 /**
  * Admin menu registration.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Admin;
+namespace Mino\Option\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Registry\PageRegistry;
+use Mino\Option\Registry\PageRegistry;
 
 /**
  * Registers top-level and submenu pages.

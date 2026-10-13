@@ -2,17 +2,17 @@
 /**
  * Type-aware sanitization pipeline.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Validation;
+namespace Mino\Option\Validation;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Fields\FieldTypeRegistry;
-use Arash\SettingsFramework\Registry\PageRegistry;
+use Mino\Option\Fields\FieldTypeRegistry;
+use Mino\Option\Registry\PageRegistry;
 
 /**
  * Sanitizes inbound settings against registered field definitions.
@@ -57,7 +57,7 @@ final class Sanitizer {
 		 * @param array  $input   Raw input.
 		 * @param string $page_id Page ID.
 		 */
-		return apply_filters( 'asf_sanitize_page', $out, $input, $page_id );
+		return apply_filters( 'mino_sanitize_page', $out, $input, $page_id );
 	}
 
 	/**
@@ -83,7 +83,7 @@ final class Sanitizer {
 		 * @param mixed $value Sanitized value.
 		 * @param array $field Field config.
 		 */
-		return apply_filters( 'asf_sanitize_field', $value, $field );
+		return apply_filters( 'mino_sanitize_field', $value, $field );
 	}
 
 	/**

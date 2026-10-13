@@ -2,12 +2,12 @@
 /**
  * Rich text editor field.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Fields;
+namespace Mino\Option\Fields;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -58,15 +58,15 @@ final class EditorField extends AbstractField {
 		);
 
 		/**
-		 * Filters wp_editor settings for an ASF editor field.
+		 * Filters wp_editor settings for an Mino Option editor field.
 		 *
 		 * @param array $settings Settings.
 		 * @param array $field    Field config.
 		 * @param array $context  Context.
 		 */
-		$settings = apply_filters( 'asf_editor_settings', $settings, $field, $context );
+		$settings = apply_filters( 'mino_editor_settings', $settings, $field, $context );
 
-		echo '<div class="asf-editor">';
+		echo '<div class="mino-editor">';
 		wp_editor( (string) ( $value ?? '' ), $editor_id, $settings );
 		echo '</div>';
 	}

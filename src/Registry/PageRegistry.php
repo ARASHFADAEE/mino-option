@@ -2,12 +2,12 @@
 /**
  * Settings page and tab registry.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Registry;
+namespace Mino\Option\Registry;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -78,7 +78,7 @@ final class PageRegistry {
 		 * @param array  $config Page config.
 		 * @param string $id     Page ID.
 		 */
-		$config = apply_filters( 'asf_register_page', $config, $id );
+		$config = apply_filters( 'mino_register_page', $config, $id );
 
 		$this->pages[ $id ] = $config;
 
@@ -88,7 +88,7 @@ final class PageRegistry {
 		 * @param array  $config Page config.
 		 * @param string $id     Page ID.
 		 */
-		do_action( 'asf_page_registered', $config, $id );
+		do_action( 'mino_page_registered', $config, $id );
 	}
 
 	/**
@@ -122,7 +122,7 @@ final class PageRegistry {
 		 * @param array  $config  Tab config.
 		 * @param string $page_id Page ID.
 		 */
-		$config = apply_filters( 'asf_register_tab', $config, $page_id );
+		$config = apply_filters( 'mino_register_tab', $config, $page_id );
 
 		$this->tabs[ $page_id ][ $tab_id ] = $config;
 
@@ -132,7 +132,7 @@ final class PageRegistry {
 		 * @param array  $config  Tab config.
 		 * @param string $page_id Page ID.
 		 */
-		do_action( 'asf_tab_registered', $config, $page_id );
+		do_action( 'mino_tab_registered', $config, $page_id );
 	}
 
 	/**
@@ -178,7 +178,7 @@ final class PageRegistry {
 		 * @param array  $fields  Field configs keyed by ID.
 		 * @param string $page_id Page ID.
 		 */
-		return apply_filters( 'asf_page_fields', $fields, $page_id );
+		return apply_filters( 'mino_page_fields', $fields, $page_id );
 	}
 
 	/**
@@ -201,7 +201,7 @@ final class PageRegistry {
 		 * @param array  $defaults Defaults.
 		 * @param string $page_id  Page ID.
 		 */
-		return apply_filters( 'asf_page_defaults', $defaults, $page_id );
+		return apply_filters( 'mino_page_defaults', $defaults, $page_id );
 	}
 
 	/**
@@ -363,7 +363,7 @@ final class PageRegistry {
 		 * @param array $normalized Normalized field.
 		 * @param array $field      Original field.
 		 */
-		return apply_filters( 'asf_normalize_field', $normalized, $field );
+		return apply_filters( 'mino_normalize_field', $normalized, $field );
 	}
 
 	/**

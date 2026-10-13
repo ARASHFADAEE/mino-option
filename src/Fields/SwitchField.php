@@ -2,16 +2,16 @@
 /**
  * Switch / toggle field.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Fields;
+namespace Mino\Option\Fields;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Validation\Sanitizer;
+use Mino\Option\Validation\Sanitizer;
 
 /**
  * Accessible switch control storing a boolean.
@@ -42,17 +42,17 @@ final class SwitchField extends AbstractField {
 		?>
 		<button
 			type="button"
-			class="asf-switch<?php echo $checked ? ' is-on' : ''; ?>"
+			class="mino-switch<?php echo $checked ? ' is-on' : ''; ?>"
 			role="switch"
 			aria-checked="<?php echo $checked ? 'true' : 'false'; ?>"
-			data-asf-switch
+			data-mino-switch
 			id="<?php echo esc_attr( $id ); ?>-btn"
 			<?php disabled( ! empty( $field['disabled'] ) ); ?>
 		>
-			<span class="asf-switch-track" aria-hidden="true"><span class="asf-switch-thumb"></span></span>
+			<span class="mino-switch-track" aria-hidden="true"><span class="mino-switch-thumb"></span></span>
 			<span class="screen-reader-text"><?php echo esc_html( (string) $field['title'] ); ?></span>
 		</button>
-		<input type="hidden" class="asf-switch-input" name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $id ); ?>" value="<?php echo $checked ? '1' : '0'; ?>" />
+		<input type="hidden" class="mino-switch-input" name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $id ); ?>" value="<?php echo $checked ? '1' : '0'; ?>" />
 		<?php
 	}
 }

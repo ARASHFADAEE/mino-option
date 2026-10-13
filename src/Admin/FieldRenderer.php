@@ -2,16 +2,16 @@
 /**
  * Field row rendering.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Admin;
+namespace Mino\Option\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Fields\FieldTypeRegistry;
+use Mino\Option\Fields\FieldTypeRegistry;
 
 /**
  * Renders a field wrapper + control.
@@ -49,10 +49,10 @@ final class FieldRenderer {
 		}
 
 		if ( ! $handler ) {
-			echo '<p class="asf-error">' . esc_html(
+			echo '<p class="mino-error">' . esc_html(
 				sprintf(
 					/* translators: %s: field type */
-					__( 'Unknown field type: %s', 'arash-settings-framework' ),
+					__( 'Unknown field type: %s', 'mino-option' ),
 					$type
 				)
 			) . '</p>';
@@ -61,8 +61,8 @@ final class FieldRenderer {
 
 		$dep = ! empty( $field['require'] ) ? $field['require'] : ( $field['dependency'] ?? array() );
 		$classes = array(
-			'asf-field',
-			'asf-field--' . sanitize_html_class( $type ),
+			'mino-field',
+			'mino-field--' . sanitize_html_class( $type ),
 		);
 		if ( ! empty( $field['class'] ) ) {
 			$classes[] = sanitize_html_class( (string) $field['class'] );
@@ -72,21 +72,21 @@ final class FieldRenderer {
 		?>
 		<div
 			class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>"
-			data-asf-field="<?php echo esc_attr( (string) $field['id'] ); ?>"
+			data-mino-field="<?php echo esc_attr( (string) $field['id'] ); ?>"
 			<?php if ( ! empty( $dep ) ) : ?>
-				data-asf-require="<?php echo esc_attr( wp_json_encode( $dep ) ); ?>"
+				data-mino-require="<?php echo esc_attr( wp_json_encode( $dep ) ); ?>"
 			<?php endif; ?>
 		>
 			<?php if ( ! in_array( $type, self::$display_types, true ) && 'checkbox' !== $type ) : ?>
-				<label class="asf-field-label" for="<?php echo esc_attr( (string) $field['id'] ); ?>" id="<?php echo esc_attr( (string) $field['id'] ); ?>-label">
+				<label class="mino-field-label" for="<?php echo esc_attr( (string) $field['id'] ); ?>" id="<?php echo esc_attr( (string) $field['id'] ); ?>-label">
 					<?php echo esc_html( (string) $field['title'] ); ?>
 					<?php if ( ! empty( $field['required'] ) ) : ?>
-						<span class="asf-required" aria-hidden="true">*</span>
+						<span class="mino-required" aria-hidden="true">*</span>
 					<?php endif; ?>
 				</label>
 			<?php endif; ?>
 
-			<div class="asf-field-control">
+			<div class="mino-field-control">
 				<?php
 				$handler->render(
 					$field,
@@ -101,7 +101,7 @@ final class FieldRenderer {
 			</div>
 
 			<?php if ( ! empty( $field['description'] ) && ! in_array( $type, array( 'notice', 'heading' ), true ) ) : ?>
-				<p class="asf-field-description" id="<?php echo esc_attr( (string) $field['id'] ); ?>-desc">
+				<p class="mino-field-description" id="<?php echo esc_attr( (string) $field['id'] ); ?>-desc">
 					<?php echo esc_html( (string) $field['description'] ); ?>
 				</p>
 			<?php endif; ?>
@@ -117,6 +117,6 @@ final class FieldRenderer {
 		 * @param mixed  $value   Value.
 		 * @param string $page_id Page ID.
 		 */
-		echo apply_filters( 'asf_render_field', $html, $field, $value, $page_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo apply_filters( 'mino_render_field', $html, $field, $value, $page_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }

@@ -2,12 +2,12 @@
 /**
  * Textarea field.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Fields;
+namespace Mino\Option\Fields;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -42,7 +42,7 @@ final class TextareaField extends AbstractField {
 			$context,
 			array(
 				'rows'  => (int) ( $field['rows'] ?? 4 ),
-				'class' => trim( 'asf-textarea ' . (string) ( $field['class'] ?? '' ) ),
+				'class' => trim( 'mino-textarea ' . (string) ( $field['class'] ?? '' ) ),
 			)
 		);
 		unset( $attrs['value'] );

@@ -2,12 +2,12 @@
 /**
  * Section heading (non-persistent).
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Fields;
+namespace Mino\Option\Fields;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -34,9 +34,9 @@ final class HeadingField extends AbstractField {
 	 * {@inheritdoc}
 	 */
 	public function render( array $field, $value, array $context ): void {
-		echo '<h3 class="asf-heading">' . esc_html( (string) $field['title'] ) . '</h3>';
+		echo '<h3 class="mino-heading">' . esc_html( (string) $field['title'] ) . '</h3>';
 		if ( ! empty( $field['description'] ) ) {
-			echo '<p class="asf-heading-desc">' . esc_html( (string) $field['description'] ) . '</p>';
+			echo '<p class="mino-heading-desc">' . esc_html( (string) $field['description'] ) . '</p>';
 		}
 	}
 }

@@ -2,12 +2,12 @@
 /**
  * Shared field helpers.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Fields;
+namespace Mino\Option\Fields;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -57,7 +57,7 @@ abstract class AbstractField implements FieldInterface {
 			array(
 				'id'    => (string) ( $context['id'] ?? $field['id'] ),
 				'name'  => (string) ( $context['name'] ?? $field['id'] ),
-				'class' => trim( 'asf-input ' . (string) ( $field['class'] ?? '' ) ),
+				'class' => trim( 'mino-input ' . (string) ( $field['class'] ?? '' ) ),
 			),
 			isset( $field['attributes'] ) && is_array( $field['attributes'] ) ? $field['attributes'] : array()
 		);
@@ -82,7 +82,7 @@ abstract class AbstractField implements FieldInterface {
 		 * @param array $field   Field.
 		 * @param array $context Context.
 		 */
-		return apply_filters( 'asf_field_attributes', $attrs, $field, $context );
+		return apply_filters( 'mino_field_attributes', $attrs, $field, $context );
 	}
 
 	/**

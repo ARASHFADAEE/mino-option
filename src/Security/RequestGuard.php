@@ -2,16 +2,16 @@
 /**
  * Authorization and nonce helpers.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Security;
+namespace Mino\Option\Security;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Registry\PageRegistry;
+use Mino\Option\Registry\PageRegistry;
 
 /**
  * Capability + nonce checks for settings writes and privileged renders.
@@ -21,7 +21,7 @@ final class RequestGuard {
 	/**
 	 * Nonce action prefix.
 	 */
-	public const NONCE_ACTION = 'asf_save_settings';
+	public const NONCE_ACTION = 'mino_save_settings';
 
 	/**
 	 * @param string $page_id Page ID.
@@ -34,14 +34,14 @@ final class RequestGuard {
 	 * @param string $page_id Page ID.
 	 */
 	public static function nonce_field( string $page_id ): void {
-		wp_nonce_field( self::nonce_action( $page_id ), 'asf_nonce' );
+		wp_nonce_field( self::nonce_action( $page_id ), 'mino_nonce' );
 	}
 
 	/**
 	 * @param string $page_id Page ID.
 	 */
 	public static function verify_nonce( string $page_id ): bool {
-		$nonce = isset( $_REQUEST['asf_nonce'] ) ? sanitize_text_field( wp_unslash( (string) $_REQUEST['asf_nonce'] ) ) : '';
+		$nonce = isset( $_REQUEST['mino_nonce'] ) ? sanitize_text_field( wp_unslash( (string) $_REQUEST['mino_nonce'] ) ) : '';
 		return (bool) wp_verify_nonce( $nonce, self::nonce_action( $page_id ) );
 	}
 
@@ -63,7 +63,7 @@ final class RequestGuard {
 		 * @param string $page_id Page ID.
 		 * @param string $cap     Capability.
 		 */
-		return (bool) apply_filters( 'asf_user_can', current_user_can( $cap ), $page_id, $cap );
+		return (bool) apply_filters( 'mino_user_can', current_user_can( $cap ), $page_id, $cap );
 	}
 
 	/**

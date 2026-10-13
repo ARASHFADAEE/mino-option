@@ -2,16 +2,16 @@
 /**
  * Checkbox field.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Fields;
+namespace Mino\Option\Fields;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Validation\Sanitizer;
+use Mino\Option\Validation\Sanitizer;
 
 /**
  * Single checkbox (boolean).
@@ -40,9 +40,9 @@ final class CheckboxField extends AbstractField {
 		$id    = (string) ( $context['id'] ?? $field['id'] );
 		$checked = Sanitizer::boolean( $value );
 		?>
-		<label class="asf-checkbox" for="<?php echo esc_attr( $id ); ?>">
-			<input type="checkbox" class="asf-checkbox-input" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="1" <?php checked( $checked ); ?> <?php disabled( ! empty( $field['disabled'] ) ); ?> />
-			<span class="asf-checkbox-label"><?php echo esc_html( (string) $field['title'] ); ?></span>
+		<label class="mino-checkbox" for="<?php echo esc_attr( $id ); ?>">
+			<input type="checkbox" class="mino-checkbox-input" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="1" <?php checked( $checked ); ?> <?php disabled( ! empty( $field['disabled'] ) ); ?> />
+			<span class="mino-checkbox-label"><?php echo esc_html( (string) $field['title'] ); ?></span>
 		</label>
 		<?php
 	}

@@ -2,16 +2,16 @@
 /**
  * Server-side conditional helpers (documentation / future use).
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Support;
+namespace Mino\Option\Support;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Validation\Sanitizer;
+use Mino\Option\Validation\Sanitizer;
 
 /**
  * Evaluates require/dependency rules against a value map.

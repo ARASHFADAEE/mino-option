@@ -1,8 +1,17 @@
-# Arash Settings Framework
+# Mino Option
 
-Production-ready reusable WordPress settings framework for plugins and themes.
+**Clean settings framework for WordPress plugins & themes.**
 
-Build polished admin settings pages from PHP configuration arrays — tabs, conditionals, repeaters, media, color, and editors — with a small public API and strict server-side validation.
+Build polished admin settings pages from PHP configuration arrays — tabs, conditionals, repeaters, media, color, and editors — with a small public API, AJAX save, and strict server-side validation.
+
+| | |
+|---|---|
+| **Brand** | Mino Option |
+| **Package** | `mino/option` |
+| **Namespace** | `Mino\Option` |
+| **Helpers** | `mino_get_option()`, `mino_get_options()` |
+| **Bootstrap** | `mino-option.php` |
+| **Text domain** | `mino-option` |
 
 ## Requirements
 
@@ -12,18 +21,18 @@ Build polished admin settings pages from PHP configuration arrays — tabs, cond
 
 ## Installation
 
-1. Copy this repository into your plugin (e.g. `includes/arash-settings-framework/`).
-2. `require_once` `arash-settings-framework.php`.
-3. Register pages/tabs with `Arash\SettingsFramework\Settings`.
+1. Copy this repository into your plugin (e.g. `includes/mino-option/`).
+2. `require_once` `mino-option.php`.
+3. Register pages/tabs with `Mino\Option\Settings`.
 
-Or activate this folder as a plugin and use the example under `examples/asf-example-plugin/`.
+Or activate this folder as a plugin and use the example under `examples/mino-example-plugin/`.
 
 See [docs/getting-started.md](docs/getting-started.md).
 
 ## Quick start
 
 ```php
-use Arash\SettingsFramework\Settings;
+use Mino\Option\Settings;
 
 Settings::register_page([
     'id'          => 'my_plugin_settings',
@@ -55,7 +64,7 @@ Settings::register_tab('my_plugin_settings', [
     ],
 ]);
 
-$value = asf_get_option('my_plugin_settings', 'enable_feature', false);
+$value = mino_get_option('my_plugin_settings', 'enable_feature', false);
 ```
 
 ## Public API
@@ -65,11 +74,11 @@ $value = asf_get_option('my_plugin_settings', 'enable_feature', false);
 | `Settings::register_page( array $config )` | Register admin page |
 | `Settings::register_tab( string $page_id, array $config )` | Register tab + fields |
 | `Settings::register_field_type( string $type, string $class )` | Custom field class |
-| `asf_get_option( $page, $field, $default = null )` | Read one value |
-| `asf_get_options( $page )` | Read all (merged with defaults) |
-| `asf_attachment_url( $id, $size = 'full' )` | Resolve media ID → URL |
-| `asf_framework()` | Framework singleton |
-| `asf_loader_info()` | Multi-instance diagnostics |
+| `mino_get_option( $page, $field, $default = null )` | Read one value |
+| `mino_get_options( $page )` | Read all (merged with defaults) |
+| `mino_attachment_url( $id, $size = 'full' )` | Resolve media ID → URL |
+| `mino_framework()` | Framework singleton |
+| `mino_loader_info()` | Multi-instance diagnostics |
 
 Duplicate page/tab/field IDs are rejected (not silently overwritten).
 
@@ -97,9 +106,9 @@ Custom field classes + documented hooks. See [docs/extensibility.md](docs/extens
 
 ## Compatibility strategy
 
-**First loaded copy wins.** Later bundles of the same major version are skipped. Incompatible majors are reported when `WP_DEBUG` is enabled. ASF does not hot-swap implementations after boot.
+**First loaded copy wins.** Later bundles of the same major version are skipped. Incompatible majors are reported when `WP_DEBUG` is enabled. Mino Option does not hot-swap implementations after boot.
 
-Prefixes: PHP namespace `Arash\SettingsFramework`, functions `asf_*`, assets `asf-`, text domain `arash-settings-framework`.
+Prefixes: PHP namespace `Mino\Option`, functions `mino_*`, assets `mino-`, text domain `mino-option`.
 
 ## Testing
 

@@ -2,29 +2,29 @@
 /**
  * Core framework tests.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Tests\Unit;
+namespace Mino\Option\Tests\Unit;
 
-use Arash\SettingsFramework\Framework;
-use Arash\SettingsFramework\Registry\PageRegistry;
-use Arash\SettingsFramework\Security\RequestGuard;
-use Arash\SettingsFramework\Settings;
-use Arash\SettingsFramework\Storage\OptionStore;
-use Arash\SettingsFramework\Support\ConditionalEvaluator;
-use Arash\SettingsFramework\Validation\Sanitizer;
+use Mino\Option\Framework;
+use Mino\Option\Registry\PageRegistry;
+use Mino\Option\Security\RequestGuard;
+use Mino\Option\Settings;
+use Mino\Option\Storage\OptionStore;
+use Mino\Option\Support\ConditionalEvaluator;
+use Mino\Option\Validation\Sanitizer;
 use PHPUnit\Framework\TestCase;
 
 final class FrameworkTest extends TestCase {
 
 	protected function setUp(): void {
 		parent::setUp();
-		$GLOBALS['asf_test_options'] = array();
-		$GLOBALS['asf_test_user_can'] = true;
-		$GLOBALS['asf_test_attachments'] = array( 10 => array( 'url' => 'http://example.test/a.jpg', 'thumb' => 'http://example.test/a-thumb.jpg' ) );
+		$GLOBALS['mino_test_options'] = array();
+		$GLOBALS['mino_test_user_can'] = true;
+		$GLOBALS['mino_test_attachments'] = array( 10 => array( 'url' => 'http://example.test/a.jpg', 'thumb' => 'http://example.test/a-thumb.jpg' ) );
 		PageRegistry::reset();
 		OptionStore::reset_instance();
 		// Re-register builtins after registry reset of field types is not needed;
@@ -34,7 +34,7 @@ final class FrameworkTest extends TestCase {
 
 	public function test_bootstrap(): void {
 		$this->assertTrue( Framework::instance()->is_booted() );
-		$this->assertSame( '1.0.0', ASF_VERSION );
+		$this->assertSame( '1.0.0', MINO_VERSION );
 	}
 
 	public function test_register_page_and_tab(): void {
@@ -97,10 +97,10 @@ final class FrameworkTest extends TestCase {
 
 	public function test_defaults_and_retrieval(): void {
 		$this->register_demo();
-		$this->assertFalse( asf_get_option( 'demo_page', 'enable_feature' ) );
-		$this->assertSame( '', asf_get_option( 'demo_page', 'api_endpoint' ) );
-		$this->assertNull( asf_get_option( 'demo_page', 'missing_key' ) );
-		$this->assertSame( 'fallback', asf_get_option( 'demo_page', 'missing_key', 'fallback' ) );
+		$this->assertFalse( mino_get_option( 'demo_page', 'enable_feature' ) );
+		$this->assertSame( '', mino_get_option( 'demo_page', 'api_endpoint' ) );
+		$this->assertNull( mino_get_option( 'demo_page', 'missing_key' ) );
+		$this->assertSame( 'fallback', mino_get_option( 'demo_page', 'missing_key', 'fallback' ) );
 	}
 
 	public function test_boolean_false_and_string_zero_preserved(): void {
@@ -115,23 +115,23 @@ final class FrameworkTest extends TestCase {
 
 		// Register count field for allowlist on next save tests — store already wrote via save allowlist.
 		// Direct option write to simulate stored "0".
-		$GLOBALS['asf_test_options']['demo_page'] = array(
+		$GLOBALS['mino_test_options']['demo_page'] = array(
 			'enable_feature' => false,
 			'api_endpoint'   => '0',
 		);
 
-		$this->assertFalse( asf_get_option( 'demo_page', 'enable_feature', true ) );
-		$this->assertSame( '0', asf_get_option( 'demo_page', 'api_endpoint', 'x' ) );
-		$this->assertNotSame( null, asf_get_option( 'demo_page', 'enable_feature' ) );
+		$this->assertFalse( mino_get_option( 'demo_page', 'enable_feature', true ) );
+		$this->assertSame( '0', mino_get_option( 'demo_page', 'api_endpoint', 'x' ) );
+		$this->assertNotSame( null, mino_get_option( 'demo_page', 'enable_feature' ) );
 	}
 
 	public function test_defaults_do_not_overwrite_saved(): void {
 		$this->register_demo();
 		OptionStore::instance()->save( 'demo_page', array( 'enable_feature' => true ) );
-		$this->assertTrue( asf_get_option( 'demo_page', 'enable_feature' ) );
+		$this->assertTrue( mino_get_option( 'demo_page', 'enable_feature' ) );
 		// Re-reading defaults map must not mutate option.
 		PageRegistry::instance()->get_defaults( 'demo_page' );
-		$this->assertTrue( asf_get_option( 'demo_page', 'enable_feature' ) );
+		$this->assertTrue( mino_get_option( 'demo_page', 'enable_feature' ) );
 		$raw = OptionStore::instance()->raw( 'demo_page' );
 		$this->assertArrayNotHasKey( 'api_endpoint', $raw );
 	}
@@ -200,14 +200,14 @@ final class FrameworkTest extends TestCase {
 
 	public function test_unauthorized_write_and_invalid_nonce(): void {
 		$this->register_demo();
-		$GLOBALS['asf_test_user_can'] = false;
+		$GLOBALS['mino_test_user_can'] = false;
 		$this->assertFalse( RequestGuard::authorize_write( 'demo_page' ) );
 
-		$GLOBALS['asf_test_user_can'] = true;
-		$_REQUEST['asf_nonce']        = 'invalid';
+		$GLOBALS['mino_test_user_can'] = true;
+		$_REQUEST['mino_nonce']        = 'invalid';
 		$this->assertFalse( RequestGuard::authorize_write( 'demo_page' ) );
 
-		$_REQUEST['asf_nonce'] = wp_create_nonce( RequestGuard::nonce_action( 'demo_page' ) );
+		$_REQUEST['mino_nonce'] = wp_create_nonce( RequestGuard::nonce_action( 'demo_page' ) );
 		$this->assertTrue( RequestGuard::authorize_write( 'demo_page' ) );
 	}
 
@@ -239,8 +239,8 @@ final class FrameworkTest extends TestCase {
 			)
 		);
 		OptionStore::instance()->reset( 'demo_page' );
-		$this->assertFalse( asf_get_option( 'demo_page', 'enable_feature' ) );
-		$this->assertSame( '', asf_get_option( 'demo_page', 'api_endpoint' ) );
+		$this->assertFalse( mino_get_option( 'demo_page', 'enable_feature' ) );
+		$this->assertSame( '', mino_get_option( 'demo_page', 'api_endpoint' ) );
 	}
 
 	public function test_sanitize_tab(): void {
@@ -255,7 +255,7 @@ final class FrameworkTest extends TestCase {
 	}
 
 	public function test_multi_instance_loader_info(): void {
-		$info = asf_loader_info();
+		$info = mino_loader_info();
 		$this->assertIsArray( $info );
 	}
 

@@ -1,6 +1,6 @@
 {
-  "name": "arash/settings-framework",
-  "description": "Production-ready reusable WordPress settings framework.",
+  "name": "mino/option",
+  "description": "Mino Option \u2014 clean WordPress settings framework for plugins and themes.",
   "type": "wordpress-plugin",
   "license": "MIT",
   "authors": [
@@ -16,17 +16,17 @@
   },
   "autoload": {
     "psr-4": {
-      "Arash\\SettingsFramework\\": "src/"
+      "Mino\\Option\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Arash\\SettingsFramework\\Tests\\": "tests/"
+      "Mino\\Option\\Tests\\": "tests/"
     }
   },
   "scripts": {
     "test": "bash bin/run-tests.sh",
-    "lint": "php -l arash-settings-framework.php && find src examples tests -name '*.php' -print0 | xargs -0 -n1 php -l"
+    "lint": "php -l mino-option.php && find src examples tests -name '*.php' -print0 | xargs -0 -n1 php -l"
   },
   "minimum-stability": "stable",
   "prefer-stable": true,

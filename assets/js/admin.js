@@ -1,11 +1,11 @@
 /**
- * Arash Settings Framework — admin interactions.
- * Scoped to .asf-settings; no global pollution beyond asfAdmin localization.
+ * Mino Option — admin interactions.
+ * Scoped to .mino-settings; no global pollution beyond minoAdmin localization.
  */
 (function () {
 	'use strict';
 
-	var cfg = window.asfAdmin || {};
+	var cfg = window.minoAdmin || {};
 
 	function ready(fn) {
 		if (document.readyState !== 'loading') {
@@ -46,7 +46,7 @@
 			return '';
 		}
 		if (el.type === 'checkbox') return el.checked;
-		if (el.classList && el.classList.contains('asf-switch-input')) {
+		if (el.classList && el.classList.contains('mino-switch-input')) {
 			return el.value === '1' || el.value === 'true';
 		}
 		return el.value != null ? el.value : '';
@@ -135,33 +135,33 @@
 
 	function applyConditionals(scope) {
 		var root = scope || document;
-		qa(root, '[data-asf-require]').forEach(function (box) {
-			var rules = parseRequire(box.getAttribute('data-asf-require'));
-			var panel = box.closest('.asf-panel') || box.closest('.asf-settings') || document;
+		qa(root, '[data-mino-require]').forEach(function (box) {
+			var rules = parseRequire(box.getAttribute('data-mino-require'));
+			var panel = box.closest('.mino-panel') || box.closest('.mino-settings') || document;
 			var ok = evaluateRules(rules, panel);
 			box.classList.toggle('is-hidden', !ok);
 			box.setAttribute('aria-hidden', ok ? 'false' : 'true');
 			qa(box, 'input, select, textarea, button').forEach(function (el) {
 				if (el.dataset.asfKeepDisabled === '1') return;
-				el.disabled = !ok || el.hasAttribute('data-asf-orig-disabled');
+				el.disabled = !ok || el.hasAttribute('data-mino-orig-disabled');
 			});
 		});
 	}
 
 	function initTabs(root) {
-		qa(root, '.asf-tab').forEach(function (tab) {
+		qa(root, '.mino-tab').forEach(function (tab) {
 			tab.addEventListener('click', function (e) {
 				// Allow modifier/middle clicks to open normally.
 				if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
 				e.preventDefault();
-				var id = tab.getAttribute('data-asf-tab');
-				qa(root, '.asf-tab').forEach(function (t) {
+				var id = tab.getAttribute('data-mino-tab');
+				qa(root, '.mino-tab').forEach(function (t) {
 					var on = t === tab;
 					t.classList.toggle('is-active', on);
 					t.setAttribute('aria-selected', on ? 'true' : 'false');
 				});
-				qa(root, '.asf-panel').forEach(function (panel) {
-					var on = panel.getAttribute('data-asf-panel') === id;
+				qa(root, '.mino-panel').forEach(function (panel) {
+					var on = panel.getAttribute('data-mino-panel') === id;
 					panel.classList.toggle('is-active', on);
 					if (on) {
 						panel.removeAttribute('hidden');
@@ -172,7 +172,7 @@
 				if (window.history && window.history.replaceState) {
 					try {
 						var url = new URL(window.location.href);
-						url.searchParams.set('asf_tab', id);
+						url.searchParams.set('mino_tab', id);
 						window.history.replaceState({}, '', url.toString());
 					} catch (err) { /* ignore */ }
 				}
@@ -182,12 +182,12 @@
 	}
 
 	function initSwitches(root) {
-		qa(root, '[data-asf-switch]').forEach(function (btn) {
+		qa(root, '[data-mino-switch]').forEach(function (btn) {
 			btn.addEventListener('click', function () {
 				var on = btn.getAttribute('aria-checked') !== 'true';
 				btn.setAttribute('aria-checked', on ? 'true' : 'false');
 				btn.classList.toggle('is-on', on);
-				var input = btn.parentNode.querySelector('.asf-switch-input');
+				var input = btn.parentNode.querySelector('.mino-switch-input');
 				if (input) {
 					input.value = on ? '1' : '0';
 					input.dispatchEvent(new Event('change', { bubbles: true }));
@@ -195,9 +195,9 @@
 			});
 		});
 
-		qa(root, '.asf-buttonset-input').forEach(function (input) {
+		qa(root, '.mino-buttonset-input').forEach(function (input) {
 			input.addEventListener('change', function () {
-				qa(input.closest('.asf-buttonset'), '.asf-buttonset-item').forEach(function (item) {
+				qa(input.closest('.mino-buttonset'), '.mino-buttonset-item').forEach(function (item) {
 					item.classList.toggle('is-active', item.querySelector('input') === input && input.checked);
 				});
 			});
@@ -207,13 +207,13 @@
 	function initMedia(root) {
 		if (typeof wp === 'undefined' || !wp.media) return;
 
-		qa(root, '[data-asf-media]').forEach(function (wrap) {
-			var input = q(wrap, '.asf-media-id');
-			var preview = q(wrap, '.asf-media-preview');
+		qa(root, '[data-mino-media]').forEach(function (wrap) {
+			var input = q(wrap, '.mino-media-id');
+			var preview = q(wrap, '.mino-media-preview');
 			var library = wrap.getAttribute('data-library') || 'all';
 			var frame;
 
-			q(wrap, '.asf-media-select').addEventListener('click', function (e) {
+			q(wrap, '.mino-media-select').addEventListener('click', function (e) {
 				e.preventDefault();
 				if (frame) {
 					frame.open();
@@ -231,20 +231,20 @@
 					var url = (att.sizes && att.sizes.thumbnail && att.sizes.thumbnail.url) || att.url;
 					preview.innerHTML = url
 						? '<img src="' + url.replace(/"/g, '&quot;') + '" alt="" />'
-						: '<span class="asf-media-filename"></span>';
-					var removeBtn = q(wrap, '.asf-media-remove');
+						: '<span class="mino-media-filename"></span>';
+					var removeBtn = q(wrap, '.mino-media-remove');
 					if (removeBtn) removeBtn.disabled = false;
 					input.dispatchEvent(new Event('change', { bubbles: true }));
 				});
 				frame.open();
 			});
 
-			var remove = q(wrap, '.asf-media-remove');
+			var remove = q(wrap, '.mino-media-remove');
 			if (remove) {
 				remove.addEventListener('click', function (e) {
 					e.preventDefault();
 					input.value = '0';
-					preview.innerHTML = '<span class="asf-media-empty">' +
+					preview.innerHTML = '<span class="mino-media-empty">' +
 						((cfg.i18n && cfg.i18n.noFile) || 'No file selected') + '</span>';
 					remove.disabled = true;
 					input.dispatchEvent(new Event('change', { bubbles: true }));
@@ -252,12 +252,12 @@
 			}
 		});
 
-		qa(root, '[data-asf-gallery]').forEach(function (wrap) {
-			var input = q(wrap, '.asf-gallery-ids');
-			var list = q(wrap, '.asf-gallery-list');
+		qa(root, '[data-mino-gallery]').forEach(function (wrap) {
+			var input = q(wrap, '.mino-gallery-ids');
+			var list = q(wrap, '.mino-gallery-list');
 			var frame;
 
-			q(wrap, '.asf-gallery-select').addEventListener('click', function (e) {
+			q(wrap, '.mino-gallery-select').addEventListener('click', function (e) {
 				e.preventDefault();
 				if (!frame) {
 					frame = wp.media({
@@ -274,7 +274,7 @@
 							var url = (a.sizes && a.sizes.thumbnail && a.sizes.thumbnail.url) || a.url;
 							return '<li data-id="' + a.id + '"><img src="' + String(url).replace(/"/g, '&quot;') + '" alt="" /></li>';
 						}).join('');
-						var clearBtn = q(wrap, '.asf-gallery-clear');
+						var clearBtn = q(wrap, '.mino-gallery-clear');
 						if (clearBtn) clearBtn.disabled = ids.length === 0;
 						input.dispatchEvent(new Event('change', { bubbles: true }));
 					});
@@ -282,7 +282,7 @@
 				frame.open();
 			});
 
-			var clear = q(wrap, '.asf-gallery-clear');
+			var clear = q(wrap, '.mino-gallery-clear');
 			if (clear) {
 				clear.addEventListener('click', function (e) {
 					e.preventDefault();
@@ -301,27 +301,27 @@
 				el.checked = false;
 				return;
 			}
-			if (el.classList && el.classList.contains('asf-switch-input')) {
+			if (el.classList && el.classList.contains('mino-switch-input')) {
 				el.value = '0';
-				var btn = el.parentNode && el.parentNode.querySelector('[data-asf-switch]');
+				var btn = el.parentNode && el.parentNode.querySelector('[data-mino-switch]');
 				if (btn) {
 					btn.classList.remove('is-on');
 					btn.setAttribute('aria-checked', 'false');
 				}
 				return;
 			}
-			if (el.classList && (el.classList.contains('asf-media-id') || el.classList.contains('asf-gallery-ids'))) {
-				el.value = el.classList.contains('asf-gallery-ids') ? '' : '0';
-				var media = el.closest('.asf-media, .asf-gallery');
+			if (el.classList && (el.classList.contains('mino-media-id') || el.classList.contains('mino-gallery-ids'))) {
+				el.value = el.classList.contains('mino-gallery-ids') ? '' : '0';
+				var media = el.closest('.mino-media, .mino-gallery');
 				if (media) {
-					var preview = q(media, '.asf-media-preview');
+					var preview = q(media, '.mino-media-preview');
 					if (preview) {
-						preview.innerHTML = '<span class="asf-media-empty">' +
+						preview.innerHTML = '<span class="mino-media-empty">' +
 							((cfg.i18n && cfg.i18n.noFile) || 'No file selected') + '</span>';
 					}
-					var list = q(media, '.asf-gallery-list');
+					var list = q(media, '.mino-gallery-list');
 					if (list) list.innerHTML = '';
-					var removeBtn = q(media, '.asf-media-remove, .asf-gallery-clear');
+					var removeBtn = q(media, '.mino-media-remove, .mino-gallery-clear');
 					if (removeBtn) removeBtn.disabled = true;
 				}
 				return;
@@ -335,7 +335,7 @@
 	}
 
 	function reindexRepeater(wrap) {
-		var rows = qa(wrap, '[data-asf-repeater-row]');
+		var rows = qa(wrap, '[data-mino-repeater-row]');
 		var base = wrap.getAttribute('data-name') || '';
 		var esc = base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 		rows.forEach(function (row, index) {
@@ -351,7 +351,7 @@
 						.replace(/___i___/, '_' + index + '_');
 				}
 			});
-			var label = q(row, '.asf-repeater-row-label');
+			var label = q(row, '.mino-repeater-row-label');
 			if (label) {
 				label.textContent = label.textContent.replace(/\d+|{{INDEX}}|__i__/, String(index + 1));
 				if (!/\d/.test(label.textContent)) {
@@ -359,7 +359,7 @@
 				}
 			}
 		});
-		var empty = q(wrap, '.asf-repeater-empty');
+		var empty = q(wrap, '.mino-repeater-empty');
 		if (empty) empty.style.display = rows.length ? 'none' : '';
 	}
 
@@ -380,7 +380,7 @@
 				.replace(/\{\{INDEX\}\}/g, '0');
 			var div = document.createElement('div');
 			div.innerHTML = html.trim();
-			var fromTpl = div.querySelector('[data-asf-repeater-row]') || div.firstElementChild;
+			var fromTpl = div.querySelector('[data-mino-repeater-row]') || div.firstElementChild;
 			if (fromTpl) {
 				clearRowValues(fromTpl);
 				return fromTpl;
@@ -388,7 +388,7 @@
 		}
 
 		// Fallback: clone an existing row (preview / empty template).
-		var existing = q(wrap, '[data-asf-repeater-row]');
+		var existing = q(wrap, '[data-mino-repeater-row]');
 		if (!existing) return null;
 		var clone = existing.cloneNode(true);
 		clearRowValues(clone);
@@ -396,26 +396,26 @@
 	}
 
 	function initRepeater(root) {
-		qa(root, '[data-asf-repeater]').forEach(function (wrap) {
-			var rowsWrap = q(wrap, '[data-asf-repeater-rows]');
-			var tpl = q(wrap, '.asf-repeater-template');
+		qa(root, '[data-mino-repeater]').forEach(function (wrap) {
+			var rowsWrap = q(wrap, '[data-mino-repeater-rows]');
+			var tpl = q(wrap, '.mino-repeater-template');
 			var max = parseInt(wrap.getAttribute('data-max') || '50', 10);
 			var min = parseInt(wrap.getAttribute('data-min') || '0', 10);
-			var addBtn = q(wrap, '.asf-repeater-add');
+			var addBtn = q(wrap, '.mino-repeater-add');
 
 			function rowCount() {
-				return qa(wrap, '[data-asf-repeater-row]').length;
+				return qa(wrap, '[data-mino-repeater-row]').length;
 			}
 
 			function appendRow(row) {
 				if (!row || !rowsWrap) return;
-				var empty = q(wrap, '.asf-repeater-empty');
+				var empty = q(wrap, '.mino-repeater-empty');
 				if (empty) empty.remove();
 				rowsWrap.appendChild(row);
 				reindexRepeater(wrap);
 				initSwitches(row);
 				initMedia(row);
-				applyConditionals(wrap.closest('.asf-panel') || root);
+				applyConditionals(wrap.closest('.mino-panel') || root);
 			}
 
 			if (addBtn) {
@@ -427,26 +427,26 @@
 			}
 
 			wrap.addEventListener('click', function (e) {
-				var removeBtn = e.target.closest('.asf-repeater-remove');
+				var removeBtn = e.target.closest('.mino-repeater-remove');
 				if (removeBtn) {
 					e.preventDefault();
 					if (rowCount() <= min) return;
-					var row = removeBtn.closest('[data-asf-repeater-row]');
+					var row = removeBtn.closest('[data-mino-repeater-row]');
 					if (row) row.remove();
 					reindexRepeater(wrap);
 					if (!rowCount() && rowsWrap) {
 						var p = document.createElement('p');
-						p.className = 'asf-repeater-empty';
+						p.className = 'mino-repeater-empty';
 						p.textContent = 'No items yet. Add a row to get started.';
 						rowsWrap.appendChild(p);
 					}
 					return;
 				}
-				var dupBtn = e.target.closest('.asf-repeater-duplicate');
+				var dupBtn = e.target.closest('.mino-repeater-duplicate');
 				if (dupBtn) {
 					e.preventDefault();
 					if (rowCount() >= max) return;
-					var source = dupBtn.closest('[data-asf-repeater-row]');
+					var source = dupBtn.closest('[data-mino-repeater-row]');
 					if (!source) return;
 					var clone = source.cloneNode(true);
 					appendRow(clone);
@@ -455,8 +455,8 @@
 
 			if (window.jQuery && jQuery.fn.sortable) {
 				jQuery(rowsWrap).sortable({
-					handle: '.asf-repeater-handle',
-					items: '[data-asf-repeater-row]',
+					handle: '.mino-repeater-handle',
+					items: '[data-mino-repeater-row]',
 					update: function () { reindexRepeater(wrap); }
 				});
 			}
@@ -464,25 +464,25 @@
 	}
 
 	function ensureOverlay(root) {
-		var overlay = q(root, '.asf-loading-overlay');
+		var overlay = q(root, '.mino-loading-overlay');
 		if (overlay) return overlay;
 		overlay = document.createElement('div');
-		overlay.className = 'asf-loading-overlay';
+		overlay.className = 'mino-loading-overlay';
 		overlay.hidden = true;
 		overlay.setAttribute('aria-hidden', 'true');
 		overlay.innerHTML =
-			'<div class="asf-loader" role="status" aria-live="polite">' +
-			'<span class="asf-loader-spinner" aria-hidden="true"></span>' +
-			'<span class="asf-loader-text"></span></div>';
+			'<div class="mino-loader" role="status" aria-live="polite">' +
+			'<span class="mino-loader-spinner" aria-hidden="true"></span>' +
+			'<span class="mino-loader-text"></span></div>';
 		root.insertBefore(overlay, root.firstChild);
 		return overlay;
 	}
 
 	function ensureToast(root) {
-		var toast = q(root, '.asf-toast');
+		var toast = q(root, '.mino-toast');
 		if (toast) return toast;
 		toast = document.createElement('div');
-		toast.className = 'asf-toast';
+		toast.className = 'mino-toast';
 		toast.hidden = true;
 		toast.setAttribute('role', 'status');
 		toast.setAttribute('aria-live', 'polite');
@@ -492,7 +492,7 @@
 
 	function setLoading(root, on, label) {
 		var overlay = ensureOverlay(root);
-		var text = q(overlay, '.asf-loader-text');
+		var text = q(overlay, '.mino-loader-text');
 		if (text && label) text.textContent = label;
 		root.classList.toggle('is-loading', !!on);
 		root.setAttribute('aria-busy', on ? 'true' : 'false');
@@ -508,7 +508,7 @@
 	function showToast(root, message, type) {
 		var toast = ensureToast(root);
 		toast.textContent = message || '';
-		toast.className = 'asf-toast is-' + (type || 'success');
+		toast.className = 'mino-toast is-' + (type || 'success');
 		toast.hidden = false;
 		window.clearTimeout(toast._asfTimer);
 		toast._asfTimer = window.setTimeout(function () {
@@ -546,10 +546,10 @@
 		setLoading(root, true, loadingLabel);
 
 		var data = new FormData(form);
-		data.set('asf_action', action);
-		data.set('action', cfg.ajaxAction || 'asf_save_settings');
-		if (cfg.nonce && !data.get('asf_nonce')) {
-			data.set('asf_nonce', cfg.nonce);
+		data.set('mino_action', action);
+		data.set('action', cfg.ajaxAction || 'mino_save_settings');
+		if (cfg.nonce && !data.get('mino_nonce')) {
+			data.set('mino_nonce', cfg.nonce);
 		}
 
 		var url = cfg.ajaxUrl || (window.ajaxurl || '');
@@ -571,9 +571,9 @@
 
 			showToast(root, message, ok ? 'success' : 'error');
 
-			var flash = q(root, '.asf-flash');
+			var flash = q(root, '.mino-flash');
 			if (flash && ok) {
-				flash.className = 'notice notice-success is-dismissible asf-flash';
+				flash.className = 'notice notice-success is-dismissible mino-flash';
 				flash.innerHTML = '<p>' + message.replace(/</g, '&lt;') + '</p>';
 			}
 		}
@@ -607,14 +607,14 @@
 	}
 
 	function initAjaxForms(root) {
-		qa(root, 'form.asf-form').forEach(function (form) {
+		qa(root, 'form.mino-form').forEach(function (form) {
 			form.addEventListener('submit', function (e) {
 				e.preventDefault();
 				if (root.classList.contains('is-loading')) return;
 				submitFormAjax(root, form, 'save');
 			});
 
-			qa(form, '[data-asf-reset]').forEach(function (btn) {
+			qa(form, '[data-mino-reset]').forEach(function (btn) {
 				btn.addEventListener('click', function (e) {
 					e.preventDefault();
 					if (root.classList.contains('is-loading')) return;
@@ -628,7 +628,7 @@
 
 	function initColor(root) {
 		if (!window.jQuery || !jQuery.fn.wpColorPicker) return;
-		jQuery(root).find('.asf-color-picker').wpColorPicker({
+		jQuery(root).find('.mino-color-picker').wpColorPicker({
 			change: function () {
 				applyConditionals(root);
 			}
@@ -636,7 +636,7 @@
 	}
 
 	ready(function () {
-		qa(document, '.asf-settings').forEach(function (root) {
+		qa(document, '.mino-settings').forEach(function (root) {
 			ensureOverlay(root);
 			ensureToast(root);
 			initTabs(root);

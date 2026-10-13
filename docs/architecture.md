@@ -2,13 +2,13 @@
 
 ## Overview
 
-Arash Settings Framework (ASF) is a namespaced, modular WordPress settings toolkit designed to be bundled inside plugins and themes.
+Mino Option (Mino Option) is a namespaced, modular WordPress settings toolkit designed to be bundled inside plugins and themes.
 
 ## Component responsibilities
 
 | Component | Responsibility |
 |-----------|----------------|
-| `arash-settings-framework.php` | Multi-instance loader, constants, boot |
+| `mino-option.php` | Multi-instance loader, constants, boot |
 | `Framework` | Hook registration (once) |
 | `Settings` | Public registration facade |
 | `Registry\PageRegistry` | Pages, tabs, fields (in-memory) |
@@ -23,13 +23,13 @@ Arash Settings Framework (ASF) is a namespaced, modular WordPress settings toolk
 
 ## Bootstrap lifecycle
 
-1. Bundle metadata is pushed into `$GLOBALS['asf_loader_registry']`.
+1. Bundle metadata is pushed into `$GLOBALS['mino_loader_registry']`.
 2. **First loaded copy wins.** Later copies are skipped; major mismatches are recorded as conflicts.
 3. Autoloader + `functions.php` load; `Framework::boot()` registers hooks once.
 4. Consumer plugins call `Settings::register_page()` / `register_tab()` on `plugins_loaded` (or earlier).
 5. On `admin_menu`, menus are created from the registry.
 6. On `admin_enqueue_scripts`, assets load only when `$_GET['page']` matches a registered slug.
-7. On save, the admin UI posts via AJAX (`asf_save_settings`) with a glass loading overlay; `admin_init` still accepts classic POST as a no-JS fallback.
+7. On save, the admin UI posts via AJAX (`mino_save_settings`) with a glass loading overlay; `admin_init` still accepts classic POST as a no-JS fallback.
 
 ## Multi-instance strategy
 
@@ -38,9 +38,9 @@ Arash Settings Framework (ASF) is a namespaced, modular WordPress settings toolk
 Why not “highest version wins”?
 
 - Optionino’s approach can swap implementations after another plugin has already registered settings against an older API shape.
-- ASF refuses to replace a booted runtime. Incompatible majors surface under `WP_DEBUG`.
+- Mino Option refuses to replace a booted runtime. Incompatible majors surface under `WP_DEBUG`.
 
-Trade-off: an older copy loaded first keeps running. Document that host plugins should load ASF early, or ship a single shared mu-plugin copy when possible.
+Trade-off: an older copy loaded first keeps running. Document that host plugins should load Mino Option early, or ship a single shared mu-plugin copy when possible.
 
 ## Persistence
 
@@ -52,17 +52,17 @@ Trade-off: an older copy loaded first keeps running. Document that host plugins 
 
 ### Migrations
 
-Future migrations can hook `asf_pre_save_options` / `asf_get_options` or run a one-time `update_option` routine keyed by `ASF_VERSION` in the consuming plugin.
+Future migrations can hook `mino_pre_save_options` / `mino_get_options` or run a one-time `update_option` routine keyed by `MINO_VERSION` in the consuming plugin.
 
 ## Saving and validation flow
 
 1. Capability check for the page.
-2. Nonce verification (`asf_save_settings_{page_id}`).
+2. Nonce verification (`mino_save_settings_{page_id}`).
 3. Strip framework meta keys from `$_POST`.
 4. `Sanitizer::sanitize_page()` — type-aware, recursive for repeaters.
 5. Drop non-persistent types (`heading`, `notice`, `html`).
 6. `Validator::validate_page()` — required, email/url, custom callables.
-7. `OptionStore::save()` → `asf_saved` action.
+7. `OptionStore::save()` → `mino_saved` action.
 
 ## Rendering flow
 
@@ -78,15 +78,15 @@ Custom tabs: `callback` callable, or `template` + `template_base` resolved throu
 
 ## Asset loading
 
-Assets enqueue only on ASF admin pages. Color, media, editor, and sortable dependencies load only when field types request them.
+Assets enqueue only on Mino Option admin pages. Color, media, editor, and sortable dependencies load only when field types request them.
 
 ## Extension points
 
-See README “Extensibility” and `docs/security.md`. Primary hooks: `asf_booted`, `asf_register_page`, `asf_register_tab`, `asf_normalize_field`, `asf_page_fields`, `asf_page_defaults`, `asf_sanitize_field`, `asf_sanitize_page`, `asf_validate_page`, `asf_pre_save_options`, `asf_saved`, `asf_reset`, `asf_render_field`, `asf_field_attributes`, `asf_enqueue_assets`, `asf_field_type_registered`, `asf_user_can`, `asf_editor_settings`.
+See README “Extensibility” and `docs/security.md`. Primary hooks: `mino_booted`, `mino_register_page`, `mino_register_tab`, `mino_normalize_field`, `mino_page_fields`, `mino_page_defaults`, `mino_sanitize_field`, `mino_sanitize_page`, `mino_validate_page`, `mino_pre_save_options`, `mino_saved`, `mino_reset`, `mino_render_field`, `mino_field_attributes`, `mino_enqueue_assets`, `mino_field_type_registered`, `mino_user_can`, `mino_editor_settings`.
 
 ## Reference project notes
 
-Inspected [optionino-framework](https://github.com/shokrino/optionino-framework) (MIT). ASF is an independent implementation. Notable Optionino limitations addressed here:
+Inspected [optionino-framework](https://github.com/shokrino/optionino-framework) (MIT). Mino Option is an independent implementation. Notable Optionino limitations addressed here:
 
 - Defaults written to DB on registration
 - Boolean stored as `"true"`/`"false"` strings

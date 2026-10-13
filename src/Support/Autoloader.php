@@ -1,18 +1,18 @@
 <?php
 /**
- * PSR-4 style autoloader for Arash\SettingsFramework.
+ * PSR-4 style autoloader for Mino\Option.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Support;
+namespace Mino\Option\Support;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Maps Arash\SettingsFramework\* to src/*.
+ * Maps Mino\Option\* to src/*.
  */
 final class Autoloader {
 
@@ -40,7 +40,7 @@ final class Autoloader {
 	 * @param string $class Fully-qualified class name.
 	 */
 	public static function load( string $class ): void {
-		$prefix = 'Arash\\SettingsFramework\\';
+		$prefix = 'Mino\\Option\\';
 
 		if ( 0 !== strpos( $class, $prefix ) ) {
 			return;

@@ -2,12 +2,12 @@
 /**
  * Field type registry.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Fields;
+namespace Mino\Option\Fields;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -107,7 +107,7 @@ final class FieldTypeRegistry {
 		 * @param string $type       Type.
 		 * @param string $class_name Class.
 		 */
-		do_action( 'asf_field_type_registered', $type, $class_name );
+		do_action( 'mino_field_type_registered', $type, $class_name );
 	}
 
 	/**

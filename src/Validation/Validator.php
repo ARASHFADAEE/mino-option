@@ -2,16 +2,16 @@
 /**
  * Optional validation rules.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Validation;
+namespace Mino\Option\Validation;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Registry\PageRegistry;
+use Mino\Option\Registry\PageRegistry;
 
 /**
  * Collects validation errors without throwing.
@@ -33,7 +33,7 @@ final class Validator {
 			if ( ! empty( $field['required'] ) && self::is_empty( $value ) ) {
 				$errors[ $field_id ] = sprintf(
 					/* translators: %s: field title */
-					__( '%s is required.', 'arash-settings-framework' ),
+					__( '%s is required.', 'mino-option' ),
 					(string) $field['title']
 				);
 				continue;
@@ -41,10 +41,10 @@ final class Validator {
 
 			$type = (string) $field['type'];
 			if ( 'email' === $type && is_string( $value ) && '' !== $value && ! is_email( $value ) ) {
-				$errors[ $field_id ] = __( 'Please enter a valid email address.', 'arash-settings-framework' );
+				$errors[ $field_id ] = __( 'Please enter a valid email address.', 'mino-option' );
 			}
 			if ( 'url' === $type && is_string( $value ) && '' !== $value && ! filter_var( $value, FILTER_VALIDATE_URL ) ) {
-				$errors[ $field_id ] = __( 'Please enter a valid URL.', 'arash-settings-framework' );
+				$errors[ $field_id ] = __( 'Please enter a valid URL.', 'mino-option' );
 			}
 
 			if ( isset( $field['validate'] ) && is_callable( $field['validate'] ) ) {
@@ -52,7 +52,7 @@ final class Validator {
 				if ( is_string( $result ) && '' !== $result ) {
 					$errors[ $field_id ] = $result;
 				} elseif ( false === $result ) {
-					$errors[ $field_id ] = __( 'Invalid value.', 'arash-settings-framework' );
+					$errors[ $field_id ] = __( 'Invalid value.', 'mino-option' );
 				}
 			}
 		}
@@ -64,7 +64,7 @@ final class Validator {
 		 * @param array  $values  Values.
 		 * @param string $page_id Page ID.
 		 */
-		return apply_filters( 'asf_validate_page', $errors, $values, $page_id );
+		return apply_filters( 'mino_validate_page', $errors, $values, $page_id );
 	}
 
 	/**

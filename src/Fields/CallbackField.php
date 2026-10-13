@@ -2,12 +2,12 @@
 /**
  * Custom callback field.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Fields;
+namespace Mino\Option\Fields;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -48,7 +48,7 @@ final class CallbackField extends AbstractField {
 	public function render( array $field, $value, array $context ): void {
 		$cb = $field['renderer'] ?? $field['callback'] ?? null;
 		if ( ! is_callable( $cb ) ) {
-			echo '<p class="asf-error">' . esc_html__( 'Callback field is missing a callable.', 'arash-settings-framework' ) . '</p>';
+			echo '<p class="mino-error">' . esc_html__( 'Callback field is missing a callable.', 'mino-option' ) . '</p>';
 			return;
 		}
 		call_user_func( $cb, $field, $value, $context );

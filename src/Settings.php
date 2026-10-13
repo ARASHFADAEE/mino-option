@@ -2,16 +2,16 @@
 /**
  * Public static registration API.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework;
+namespace Mino\Option;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Registry\PageRegistry;
+use Mino\Option\Registry\PageRegistry;
 use InvalidArgumentException;
 
 /**
@@ -68,7 +68,7 @@ final class Settings {
 	private static function report_error( string $message ): void {
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
-			trigger_error( '[ASF] ' . $message, E_USER_WARNING );
+			trigger_error( '[Mino] ' . $message, E_USER_WARNING );
 		}
 
 		add_action(
@@ -77,7 +77,7 @@ final class Settings {
 				if ( ! current_user_can( 'manage_options' ) ) {
 					return;
 				}
-				echo '<div class="notice notice-error"><p>' . esc_html( '[ASF] ' . $message ) . '</p></div>';
+				echo '<div class="notice notice-error"><p>' . esc_html( '[Mino] ' . $message ) . '</p></div>';
 			}
 		);
 	}

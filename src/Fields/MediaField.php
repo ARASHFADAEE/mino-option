@@ -2,16 +2,16 @@
 /**
  * Media field.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Fields;
+namespace Mino\Option\Fields;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Validation\Sanitizer;
+use Mino\Option\Validation\Sanitizer;
 
 /**
  * Attachment ID picker via wp.media.
@@ -50,20 +50,20 @@ class MediaField extends AbstractField {
 		$thumb = $att ? (string) wp_get_attachment_image_url( $att, 'thumbnail' ) : '';
 		$lib   = (string) ( $field['library'] ?? 'all' );
 		?>
-		<div class="asf-media" data-asf-media data-library="<?php echo esc_attr( $lib ); ?>">
-			<input type="hidden" class="asf-media-id" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( (string) $att ); ?>" />
-			<div class="asf-media-preview">
+		<div class="mino-media" data-mino-media data-library="<?php echo esc_attr( $lib ); ?>">
+			<input type="hidden" class="mino-media-id" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( (string) $att ); ?>" />
+			<div class="mino-media-preview">
 				<?php if ( $thumb ) : ?>
 					<img src="<?php echo esc_url( $thumb ); ?>" alt="" />
 				<?php elseif ( $url ) : ?>
-					<span class="asf-media-filename"><?php echo esc_html( basename( $url ) ); ?></span>
+					<span class="mino-media-filename"><?php echo esc_html( basename( $url ) ); ?></span>
 				<?php else : ?>
-					<span class="asf-media-empty"><?php esc_html_e( 'No file selected', 'arash-settings-framework' ); ?></span>
+					<span class="mino-media-empty"><?php esc_html_e( 'No file selected', 'mino-option' ); ?></span>
 				<?php endif; ?>
 			</div>
-			<div class="asf-media-actions">
-				<button type="button" class="button asf-media-select"><?php esc_html_e( 'Select', 'arash-settings-framework' ); ?></button>
-				<button type="button" class="button asf-media-remove" <?php disabled( ! $att ); ?>><?php esc_html_e( 'Remove', 'arash-settings-framework' ); ?></button>
+			<div class="mino-media-actions">
+				<button type="button" class="button mino-media-select"><?php esc_html_e( 'Select', 'mino-option' ); ?></button>
+				<button type="button" class="button mino-media-remove" <?php disabled( ! $att ); ?>><?php esc_html_e( 'Remove', 'mino-option' ); ?></button>
 			</div>
 		</div>
 		<?php

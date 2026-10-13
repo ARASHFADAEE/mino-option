@@ -2,16 +2,16 @@
 /**
  * Minimal WordPress function stubs for unit tests.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-$GLOBALS['asf_test_options'] = array();
-$GLOBALS['asf_test_hooks']   = array();
-$GLOBALS['asf_test_user_can'] = true;
-$GLOBALS['asf_test_nonces']  = array();
-$GLOBALS['asf_test_attachments'] = array();
+$GLOBALS['mino_test_options'] = array();
+$GLOBALS['mino_test_hooks']   = array();
+$GLOBALS['mino_test_user_can'] = true;
+$GLOBALS['mino_test_nonces']  = array();
+$GLOBALS['mino_test_attachments'] = array();
 
 if ( ! function_exists( 'trailingslashit' ) ) {
 	function trailingslashit( $s ) {
@@ -210,40 +210,40 @@ if ( ! function_exists( 'sanitize_html_class' ) ) {
 
 if ( ! function_exists( 'get_option' ) ) {
 	function get_option( $key, $default = false ) {
-		return array_key_exists( $key, $GLOBALS['asf_test_options'] )
-			? $GLOBALS['asf_test_options'][ $key ]
+		return array_key_exists( $key, $GLOBALS['mino_test_options'] )
+			? $GLOBALS['mino_test_options'][ $key ]
 			: $default;
 	}
 }
 
 if ( ! function_exists( 'update_option' ) ) {
 	function update_option( $key, $value, $autoload = null ) {
-		$prev = $GLOBALS['asf_test_options'][ $key ] ?? null;
-		$GLOBALS['asf_test_options'][ $key ] = $value;
+		$prev = $GLOBALS['mino_test_options'][ $key ] ?? null;
+		$GLOBALS['mino_test_options'][ $key ] = $value;
 		return $prev !== $value;
 	}
 }
 
 if ( ! function_exists( 'add_option' ) ) {
 	function add_option( $key, $value ) {
-		if ( array_key_exists( $key, $GLOBALS['asf_test_options'] ) ) {
+		if ( array_key_exists( $key, $GLOBALS['mino_test_options'] ) ) {
 			return false;
 		}
-		$GLOBALS['asf_test_options'][ $key ] = $value;
+		$GLOBALS['mino_test_options'][ $key ] = $value;
 		return true;
 	}
 }
 
 if ( ! function_exists( 'delete_option' ) ) {
 	function delete_option( $key ) {
-		unset( $GLOBALS['asf_test_options'][ $key ] );
+		unset( $GLOBALS['mino_test_options'][ $key ] );
 		return true;
 	}
 }
 
 if ( ! function_exists( 'add_action' ) ) {
 	function add_action( $hook, $callback, $priority = 10, $accepted_args = 1 ) {
-		$GLOBALS['asf_test_hooks'][ $hook ][] = compact( 'callback', 'priority' );
+		$GLOBALS['mino_test_hooks'][ $hook ][] = compact( 'callback', 'priority' );
 		return true;
 	}
 }
@@ -256,10 +256,10 @@ if ( ! function_exists( 'add_filter' ) ) {
 
 if ( ! function_exists( 'do_action' ) ) {
 	function do_action( $hook, ...$args ) {
-		if ( empty( $GLOBALS['asf_test_hooks'][ $hook ] ) ) {
+		if ( empty( $GLOBALS['mino_test_hooks'][ $hook ] ) ) {
 			return;
 		}
-		foreach ( $GLOBALS['asf_test_hooks'][ $hook ] as $item ) {
+		foreach ( $GLOBALS['mino_test_hooks'][ $hook ] as $item ) {
 			call_user_func_array( $item['callback'], $args );
 		}
 	}
@@ -267,10 +267,10 @@ if ( ! function_exists( 'do_action' ) ) {
 
 if ( ! function_exists( 'apply_filters' ) ) {
 	function apply_filters( $hook, $value, ...$args ) {
-		if ( empty( $GLOBALS['asf_test_hooks'][ $hook ] ) ) {
+		if ( empty( $GLOBALS['mino_test_hooks'][ $hook ] ) ) {
 			return $value;
 		}
-		foreach ( $GLOBALS['asf_test_hooks'][ $hook ] as $item ) {
+		foreach ( $GLOBALS['mino_test_hooks'][ $hook ] as $item ) {
 			$value = call_user_func( $item['callback'], $value, ...$args );
 		}
 		return $value;
@@ -279,20 +279,20 @@ if ( ! function_exists( 'apply_filters' ) ) {
 
 if ( ! function_exists( 'current_user_can' ) ) {
 	function current_user_can( $cap ) {
-		return (bool) $GLOBALS['asf_test_user_can'];
+		return (bool) $GLOBALS['mino_test_user_can'];
 	}
 }
 
 if ( ! function_exists( 'wp_verify_nonce' ) ) {
 	function wp_verify_nonce( $nonce, $action = -1 ) {
-		return isset( $GLOBALS['asf_test_nonces'][ $action ] ) && hash_equals( (string) $GLOBALS['asf_test_nonces'][ $action ], (string) $nonce );
+		return isset( $GLOBALS['mino_test_nonces'][ $action ] ) && hash_equals( (string) $GLOBALS['mino_test_nonces'][ $action ], (string) $nonce );
 	}
 }
 
 if ( ! function_exists( 'wp_create_nonce' ) ) {
 	function wp_create_nonce( $action = -1 ) {
 		$token = 'nonce_' . md5( (string) $action );
-		$GLOBALS['asf_test_nonces'][ $action ] = $token;
+		$GLOBALS['mino_test_nonces'][ $action ] = $token;
 		return $token;
 	}
 }
@@ -310,7 +310,7 @@ if ( ! function_exists( 'wp_nonce_field' ) ) {
 if ( ! function_exists( 'get_post' ) ) {
 	function get_post( $id ) {
 		$id = (int) $id;
-		if ( isset( $GLOBALS['asf_test_attachments'][ $id ] ) ) {
+		if ( isset( $GLOBALS['mino_test_attachments'][ $id ] ) ) {
 			return (object) array(
 				'ID'        => $id,
 				'post_type' => 'attachment',
@@ -322,13 +322,13 @@ if ( ! function_exists( 'get_post' ) ) {
 
 if ( ! function_exists( 'wp_get_attachment_url' ) ) {
 	function wp_get_attachment_url( $id ) {
-		return $GLOBALS['asf_test_attachments'][ (int) $id ]['url'] ?? false;
+		return $GLOBALS['mino_test_attachments'][ (int) $id ]['url'] ?? false;
 	}
 }
 
 if ( ! function_exists( 'wp_get_attachment_image_url' ) ) {
 	function wp_get_attachment_image_url( $id, $size = 'thumbnail' ) {
-		return $GLOBALS['asf_test_attachments'][ (int) $id ]['thumb'] ?? wp_get_attachment_url( $id );
+		return $GLOBALS['mino_test_attachments'][ (int) $id ]['thumb'] ?? wp_get_attachment_url( $id );
 	}
 }
 
@@ -340,20 +340,20 @@ if ( ! function_exists( 'get_current_user_id' ) ) {
 
 if ( ! function_exists( 'set_transient' ) ) {
 	function set_transient( $key, $value, $expiration = 0 ) {
-		$GLOBALS['asf_test_options'][ '_transient_' . $key ] = $value;
+		$GLOBALS['mino_test_options'][ '_transient_' . $key ] = $value;
 		return true;
 	}
 }
 
 if ( ! function_exists( 'get_transient' ) ) {
 	function get_transient( $key ) {
-		return $GLOBALS['asf_test_options'][ '_transient_' . $key ] ?? false;
+		return $GLOBALS['mino_test_options'][ '_transient_' . $key ] ?? false;
 	}
 }
 
 if ( ! function_exists( 'delete_transient' ) ) {
 	function delete_transient( $key ) {
-		unset( $GLOBALS['asf_test_options'][ '_transient_' . $key ] );
+		unset( $GLOBALS['mino_test_options'][ '_transient_' . $key ] );
 		return true;
 	}
 }

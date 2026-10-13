@@ -2,16 +2,16 @@
 /**
  * Buttonset field.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Fields;
+namespace Mino\Option\Fields;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Validation\Sanitizer;
+use Mino\Option\Validation\Sanitizer;
 
 /**
  * Segmented button control (radio under the hood).
@@ -40,13 +40,13 @@ final class ButtonsetField extends AbstractField {
 		$name    = (string) ( $context['name'] ?? $field['id'] );
 		$id_base = (string) ( $context['id'] ?? $field['id'] );
 		$options = isset( $field['options'] ) && is_array( $field['options'] ) ? $field['options'] : array();
-		echo '<div class="asf-buttonset" role="radiogroup">';
+		echo '<div class="mino-buttonset" role="radiogroup">';
 		foreach ( $options as $opt_value => $label ) {
 			$oid     = $id_base . '-' . sanitize_html_class( (string) $opt_value );
 			$is_active = (string) $value === (string) $opt_value;
 			?>
-			<label class="asf-buttonset-item<?php echo $is_active ? ' is-active' : ''; ?>" for="<?php echo esc_attr( $oid ); ?>">
-				<input type="radio" class="asf-buttonset-input" id="<?php echo esc_attr( $oid ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( (string) $opt_value ); ?>" <?php checked( $is_active ); ?> <?php disabled( ! empty( $field['disabled'] ) ); ?> />
+			<label class="mino-buttonset-item<?php echo $is_active ? ' is-active' : ''; ?>" for="<?php echo esc_attr( $oid ); ?>">
+				<input type="radio" class="mino-buttonset-input" id="<?php echo esc_attr( $oid ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( (string) $opt_value ); ?>" <?php checked( $is_active ); ?> <?php disabled( ! empty( $field['disabled'] ) ); ?> />
 				<span><?php echo esc_html( (string) $label ); ?></span>
 			</label>
 			<?php

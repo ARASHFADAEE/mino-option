@@ -2,17 +2,17 @@
 /**
  * Public procedural helpers.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Framework;
-use Arash\SettingsFramework\Storage\OptionStore;
+use Mino\Option\Framework;
+use Mino\Option\Storage\OptionStore;
 
-if ( ! function_exists( 'asf_get_option' ) ) {
+if ( ! function_exists( 'mino_get_option' ) ) {
 	/**
 	 * Retrieve a single setting value.
 	 *
@@ -25,24 +25,24 @@ if ( ! function_exists( 'asf_get_option' ) ) {
 	 * @param mixed|null $default  Explicit default; null uses registered field default.
 	 * @return mixed
 	 */
-	function asf_get_option( string $page_id, string $field_id, $default = null ) {
+	function mino_get_option( string $page_id, string $field_id, $default = null ) {
 		return OptionStore::instance()->get( $page_id, $field_id, $default );
 	}
 }
 
-if ( ! function_exists( 'asf_get_options' ) ) {
+if ( ! function_exists( 'mino_get_options' ) ) {
 	/**
 	 * Retrieve all settings for a page (merged with registered defaults).
 	 *
 	 * @param string $page_id Settings page ID.
 	 * @return array<string, mixed>
 	 */
-	function asf_get_options( string $page_id ): array {
+	function mino_get_options( string $page_id ): array {
 		return OptionStore::instance()->all( $page_id );
 	}
 }
 
-if ( ! function_exists( 'asf_attachment_url' ) ) {
+if ( ! function_exists( 'mino_attachment_url' ) ) {
 	/**
 	 * Resolve an attachment ID to a URL.
 	 *
@@ -50,7 +50,7 @@ if ( ! function_exists( 'asf_attachment_url' ) ) {
 	 * @param string     $size          Image size.
 	 * @return string
 	 */
-	function asf_attachment_url( $attachment_id, string $size = 'full' ): string {
+	function mino_attachment_url( $attachment_id, string $size = 'full' ): string {
 		$id = absint( $attachment_id );
 		if ( $id <= 0 ) {
 			return '';
@@ -65,24 +65,24 @@ if ( ! function_exists( 'asf_attachment_url' ) ) {
 	}
 }
 
-if ( ! function_exists( 'asf_framework' ) ) {
+if ( ! function_exists( 'mino_framework' ) ) {
 	/**
 	 * @return Framework
 	 */
-	function asf_framework(): Framework {
+	function mino_framework(): Framework {
 		return Framework::instance();
 	}
 }
 
-if ( ! function_exists( 'asf_loader_info' ) ) {
+if ( ! function_exists( 'mino_loader_info' ) ) {
 	/**
 	 * Active / skipped bundle metadata for diagnostics.
 	 *
 	 * @return array<string, mixed>
 	 */
-	function asf_loader_info(): array {
-		return isset( $GLOBALS['asf_loader_registry'] ) && is_array( $GLOBALS['asf_loader_registry'] )
-			? $GLOBALS['asf_loader_registry']
+	function mino_loader_info(): array {
+		return isset( $GLOBALS['mino_loader_registry'] ) && is_array( $GLOBALS['mino_loader_registry'] )
+			? $GLOBALS['mino_loader_registry']
 			: array();
 	}
 }

@@ -5,7 +5,7 @@
 | Boundary | Trust |
 |----------|--------|
 | PHP registration config from the developer | Trusted (code) |
-| `$_GET['page']`, `$_GET['asf_tab']` | Untrusted — sanitized / allowlisted |
+| `$_GET['page']`, `$_GET['mino_tab']` | Untrusted — sanitized / allowlisted |
 | `$_POST` field values | Untrusted — sanitized per type |
 | Custom tab `callback` | Trusted (developer code) |
 | Custom tab `template` | Trusted only inside `template_base` realpath |
@@ -14,8 +14,8 @@
 
 ## Authorization
 
-- Page render: `current_user_can( $page['capability'] )` (filterable via `asf_user_can`).
-- Save/reset: capability **and** nonce (`asf_nonce` / `asf_save_settings_{page_id}`).
+- Page render: `current_user_can( $page['capability'] )` (filterable via `mino_user_can`).
+- Save/reset: capability **and** nonce (`mino_nonce` / `mino_save_settings_{page_id}`).
 - Missing capability or nonce → `wp_die` 403 (no partial write).
 
 ## Persistence hardening
@@ -36,9 +36,9 @@
 
 ## CSRF
 
-WordPress nonces on every settings form (`asf_nonce` / `asf_save_settings_{page_id}`).
+WordPress nonces on every settings form (`mino_nonce` / `mino_save_settings_{page_id}`).
 
-Primary write path is `admin-ajax.php` action `asf_save_settings` (capability + nonce). Classic POST + redirect remains as a no-JS fallback and reuses the same `SaveHandler::process_request()` pipeline.
+Primary write path is `admin-ajax.php` action `mino_save_settings` (capability + nonce). Classic POST + redirect remains as a no-JS fallback and reuses the same `SaveHandler::process_request()` pipeline.
 
 ## XSS
 

@@ -2,16 +2,16 @@
 /**
  * Options API persistence layer.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Storage;
+namespace Mino\Option\Storage;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Registry\PageRegistry;
+use Mino\Option\Registry\PageRegistry;
 
 /**
  * One option array per settings page. Defaults are applied at read time only.
@@ -95,7 +95,7 @@ final class OptionStore {
 		 * @param array  $merged  Merged values.
 		 * @param string $page_id Page ID.
 		 */
-		return apply_filters( 'asf_get_options', $merged, $page_id );
+		return apply_filters( 'mino_get_options', $merged, $page_id );
 	}
 
 	/**
@@ -128,7 +128,7 @@ final class OptionStore {
 		 * @param string $field_id Field ID.
 		 * @param mixed  $default  Requested default.
 		 */
-		return apply_filters( 'asf_get_option', $value, $page_id, $field_id, $default );
+		return apply_filters( 'mino_get_option', $value, $page_id, $field_id, $default );
 	}
 
 	/**
@@ -158,7 +158,7 @@ final class OptionStore {
 		 * @param array  $values   Incoming sanitized values.
 		 * @param string $page_id  Page ID.
 		 */
-		$next = apply_filters( 'asf_pre_save_options', $next, $values, $page_id );
+		$next = apply_filters( 'mino_pre_save_options', $next, $values, $page_id );
 
 		$key    = $this->option_key( $page_id );
 		$result = update_option( $key, $next, false );
@@ -173,7 +173,7 @@ final class OptionStore {
 			 * @param array  $next    Saved values.
 			 * @param string $page_id Page ID.
 			 */
-			do_action( 'asf_saved', $next, $page_id );
+			do_action( 'mino_saved', $next, $page_id );
 		}
 
 		return $success;
@@ -195,7 +195,7 @@ final class OptionStore {
 		 * @param array  $defaults Defaults.
 		 * @param string $page_id  Page ID.
 		 */
-		$defaults = apply_filters( 'asf_reset_defaults', $defaults, $page_id );
+		$defaults = apply_filters( 'mino_reset_defaults', $defaults, $page_id );
 
 		$result = update_option( $key, $defaults, false );
 
@@ -205,7 +205,7 @@ final class OptionStore {
 		 * @param array  $defaults Reset values.
 		 * @param string $page_id  Page ID.
 		 */
-		do_action( 'asf_reset', $defaults, $page_id );
+		do_action( 'mino_reset', $defaults, $page_id );
 
 		return false !== $result || $this->raw( $page_id ) === $defaults;
 	}

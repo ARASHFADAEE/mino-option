@@ -2,16 +2,16 @@
 /**
  * Select field.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Fields;
+namespace Mino\Option\Fields;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Validation\Sanitizer;
+use Mino\Option\Validation\Sanitizer;
 
 /**
  * Single-select dropdown.
@@ -37,7 +37,7 @@ final class SelectField extends AbstractField {
 	 * {@inheritdoc}
 	 */
 	public function render( array $field, $value, array $context ): void {
-		$attrs   = $this->control_attrs( $field, $context, array( 'class' => 'asf-select' ) );
+		$attrs   = $this->control_attrs( $field, $context, array( 'class' => 'mino-select' ) );
 		$options = isset( $field['options'] ) && is_array( $field['options'] ) ? $field['options'] : array();
 		unset( $attrs['value'], $attrs['type'] );
 		echo '<select' . $this->attributes( $attrs ) . '>';

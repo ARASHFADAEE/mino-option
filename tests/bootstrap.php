@@ -5,7 +5,7 @@
  * Full WordPress PHPUnit suite is optional; these stubs allow core logic tests
  * without a WP install. See docs/architecture.md for WP test suite setup.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
@@ -16,26 +16,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', $root . '/tests/wp-stub/' );
 }
 
-if ( ! defined( 'ASF_VERSION' ) ) {
-	define( 'ASF_VERSION', '1.0.0' );
+if ( ! defined( 'MINO_VERSION' ) ) {
+	define( 'MINO_VERSION', '1.0.0' );
 }
-if ( ! defined( 'ASF_FILE' ) ) {
-	define( 'ASF_FILE', $root . '/arash-settings-framework.php' );
+if ( ! defined( 'MINO_FILE' ) ) {
+	define( 'MINO_FILE', $root . '/mino-option.php' );
 }
-if ( ! defined( 'ASF_PATH' ) ) {
-	define( 'ASF_PATH', $root . '/' );
+if ( ! defined( 'MINO_PATH' ) ) {
+	define( 'MINO_PATH', $root . '/' );
 }
-if ( ! defined( 'ASF_URL' ) ) {
-	define( 'ASF_URL', 'http://example.test/wp-content/plugins/arash-settings-framework/' );
+if ( ! defined( 'MINO_URL' ) ) {
+	define( 'MINO_URL', 'http://example.test/wp-content/plugins/mino-option/' );
 }
-if ( ! defined( 'ASF_TEXTDOMAIN' ) ) {
-	define( 'ASF_TEXTDOMAIN', 'arash-settings-framework' );
+if ( ! defined( 'MINO_TEXTDOMAIN' ) ) {
+	define( 'MINO_TEXTDOMAIN', 'mino-option' );
 }
 
 require_once $root . '/tests/wp-stubs.php';
 require_once $root . '/src/Support/Autoloader.php';
 
-\Arash\SettingsFramework\Support\Autoloader::register( $root . '/src/' );
+\Mino\Option\Support\Autoloader::register( $root . '/src/' );
 require_once $root . '/src/functions.php';
 
-\Arash\SettingsFramework\Framework::instance()->boot();
+\Mino\Option\Framework::instance()->boot();

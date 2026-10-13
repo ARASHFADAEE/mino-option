@@ -2,18 +2,18 @@
 /**
  * Settings page UI.
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Admin;
+namespace Mino\Option\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Registry\PageRegistry;
-use Arash\SettingsFramework\Security\RequestGuard;
-use Arash\SettingsFramework\Storage\OptionStore;
+use Mino\Option\Registry\PageRegistry;
+use Mino\Option\Security\RequestGuard;
+use Mino\Option\Storage\OptionStore;
 
 /**
  * Renders the branded settings shell.
@@ -30,21 +30,21 @@ final class PageRenderer {
 		}
 
 		if ( ! RequestGuard::user_can( $page_id ) ) {
-			wp_die( esc_html__( 'You do not have permission to access this page.', 'arash-settings-framework' ) );
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'mino-option' ) );
 		}
 
 		$tabs      = PageRegistry::instance()->get_tabs( $page_id );
-		$requested = isset( $_GET['asf_tab'] ) ? sanitize_key( wp_unslash( (string) $_GET['asf_tab'] ) ) : '';
+		$requested = isset( $_GET['mino_tab'] ) ? sanitize_key( wp_unslash( (string) $_GET['mino_tab'] ) ) : '';
 		$active    = RequestGuard::sanitize_tab( $page_id, $requested );
 		$values    = OptionStore::instance()->all( $page_id );
-		$status    = isset( $_GET['asf_status'] ) ? sanitize_key( wp_unslash( (string) $_GET['asf_status'] ) ) : '';
+		$status    = isset( $_GET['mino_status'] ) ? sanitize_key( wp_unslash( (string) $_GET['mino_status'] ) ) : '';
 
-		$template = ASF_PATH . 'templates/page.php';
+		$template = MINO_PATH . 'templates/page.php';
 		if ( is_readable( $template ) ) {
 			include $template;
 			return;
 		}
 
-		echo '<div class="wrap"><p>' . esc_html__( 'Settings template missing.', 'arash-settings-framework' ) . '</p></div>';
+		echo '<div class="wrap"><p>' . esc_html__( 'Settings template missing.', 'mino-option' ) . '</p></div>';
 	}
 }

@@ -1,6 +1,6 @@
-# راهنمای توسعه‌دهنده و ایجنت — Arash Settings Framework (ASF)
+# راهنمای توسعه‌دهنده و ایجنت — Mino Option
 
-این سند برای **برنامه‌نویس‌های وردپرس** و **ایجنت‌های هوش مصنوعی** نوشته شده تا بتوانند بدون حدس‌زدن، تنظیمات قالب یا افزونه را با ASF بسازند.
+این سند برای **برنامه‌نویس‌های وردپرس** و **ایجنت‌های هوش مصنوعی** نوشته شده تا بتوانند بدون حدس‌زدن، تنظیمات قالب یا افزونه را با Mino Option بسازند.
 
 اگر ایجنت هستید: ابتدا بخش «قوانین اجباری» را بخوانید، سپس از اسکلت کپی‌پیست استفاده کنید.
 
@@ -8,15 +8,15 @@
 
 ## ۱) این فریم‌ورک چیست؟
 
-ASF یک فریم‌ورک تنظیمات ادمین وردپرس است که:
+Mino Option یک فریم‌ورک تنظیمات ادمین وردپرس است که:
 
 - صفحه تنظیمات (منو / زیرمنو) می‌سازد
 - تب، فیلد، شرط نمایش، ریپیتر، رسانه، رنگ، ادیتور دارد
 - ذخیره را امن و AJAX انجام می‌دهد (با overlay شیشه‌ای و لودر)
-- مقدار ذخیره‌شده را با `asf_get_option()` می‌خواند
+- مقدار ذخیره‌شده را با `mino_get_option()` می‌خواند
 - داخل چند افزونه/قالب قابل باندل است (بدون Composer در runtime)
 
-**مسئولیت ASF:** UI تنظیمات + sanitize/validate + persistence  
+**مسئولیت Mino Option:** UI تنظیمات + sanitize/validate + persistence  
 **مسئولیت شما:** منطق کسب‌وکار افزونه/قالب (نه داخل core فریم‌ورک)
 
 ---
@@ -33,13 +33,13 @@ ASF یک فریم‌ورک تنظیمات ادمین وردپرس است که:
 
 | مورد | مقدار |
 |------|--------|
-| Bootstrap | `arash-settings-framework.php` |
-| Namespace | `Arash\SettingsFramework` |
-| API اصلی | `Arash\SettingsFramework\Settings` |
-| خواندن مقدار | `asf_get_option()`, `asf_get_options()` |
-| Prefix توابع | `asf_` |
-| Prefix دارایی | `asf-` |
-| Text domain | `arash-settings-framework` |
+| Bootstrap | `mino-option.php` |
+| Namespace | `Mino\Option` |
+| API اصلی | `Mino\Option\Settings` |
+| خواندن مقدار | `mino_get_option()`, `mino_get_options()` |
+| Prefix توابع | `mino_` |
+| Prefix دارایی | `mino-` |
+| Text domain | `mino-option` |
 
 ---
 
@@ -52,11 +52,11 @@ ASF یک فریم‌ورک تنظیمات ادمین وردپرس است که:
    مثال درست: `my_plugin_settings` — مثال غلط: `My-Plugin` یا `۱تنظیمات`
 4. شناسه‌ها باید **یکتا** باشند. ثبت تکراری overwrite نمی‌شود؛ خطا می‌دهد.
 5. منطق کسب‌وکار را داخل فایل‌های `src/` فریم‌ورک ننویسید؛ فقط مصرف‌کننده باشید.
-6. برای خواندن مقدار از `asf_get_option()` استفاده کنید، نه `get_option()` خام (مگر migration).
-7. مقدار پیش‌فرض را در کانفیگ فیلد بگذارید؛ ASF آن را هنگام **خواندن** merge می‌کند، نه هنگام ثبت.
+6. برای خواندن مقدار از `mino_get_option()` استفاده کنید، نه `get_option()` خام (مگر migration).
+7. مقدار پیش‌فرض را در کانفیگ فیلد بگذارید؛ Mino Option آن را هنگام **خواندن** merge می‌کند، نه هنگام ثبت.
 8. HTML خام فقط با `'trusted' => true` یا callback صریح.
 9. تب سفارشی با فایل: فقط `template` + `template_base` (allowlist مسیر). مسیر آزاد کاربر ممنوع.
-10. اگر چند کپی از ASF لود شود: **اولین کپی فعال می‌ماند** (first loaded wins).
+10. اگر چند کپی از Mino Option لود شود: **اولین کپی فعال می‌ماند** (first loaded wins).
 
 ---
 
@@ -68,7 +68,7 @@ ASF یک فریم‌ورک تنظیمات ادمین وردپرس است که:
 my-plugin/
 ├── my-plugin.php
 ├── includes/
-│   ├── arash-settings-framework/     ← کل ریپوی ASF
+│   ├── mino-option/     ← کل ریپوی Mino Option
 │   └── settings.php                  ← ثبت صفحه/تب/فیلد شما
 └── ...
 ```
@@ -86,13 +86,13 @@ defined( 'ABSPATH' ) || exit;
 define( 'MY_PLUGIN_FILE', __FILE__ );
 define( 'MY_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
-$asf = MY_PLUGIN_DIR . 'includes/arash-settings-framework/arash-settings-framework.php';
+$asf = MY_PLUGIN_DIR . 'includes/mino-option/mino-option.php';
 if ( is_readable( $asf ) ) {
 	require_once $asf;
 }
 
 add_action( 'plugins_loaded', static function () {
-	if ( ! class_exists( \Arash\SettingsFramework\Settings::class ) ) {
+	if ( ! class_exists( \Mino\Option\Settings::class ) ) {
 		return;
 	}
 	require_once MY_PLUGIN_DIR . 'includes/settings.php';
@@ -105,7 +105,7 @@ add_action( 'plugins_loaded', static function () {
 <?php
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Settings;
+use Mino\Option\Settings;
 
 Settings::register_page([
 	'id'          => 'my_plugin_settings',
@@ -153,20 +153,20 @@ Settings::register_tab( 'my_plugin_settings', [
 my-theme/
 ├── functions.php
 ├── inc/
-│   ├── arash-settings-framework/
+│   ├── mino-option/
 │   └── theme-settings.php
 ```
 
 ```php
 <?php
 // functions.php
-$asf = get_template_directory() . '/inc/arash-settings-framework/arash-settings-framework.php';
+$asf = get_template_directory() . '/inc/mino-option/mino-option.php';
 if ( is_readable( $asf ) ) {
 	require_once $asf;
 }
 
 add_action( 'after_setup_theme', static function () {
-	if ( ! class_exists( \Arash\SettingsFramework\Settings::class ) ) {
+	if ( ! class_exists( \Mino\Option\Settings::class ) ) {
 		return;
 	}
 	require_once get_template_directory() . '/inc/theme-settings.php';
@@ -218,7 +218,7 @@ Aliasهای پشتیبانی‌شده: `page_title`, `page_slug`, `page_capabili
 | `description` / `desc` | string | توضیح کوتاه سایدبار |
 | `icon` | string | کلاس dashicons |
 | `fields` | array | لیست فیلدها |
-| `callback` | callable | تب کاملاً سفارشی (بدون فرم ذخیره ASF) |
+| `callback` | callable | تب کاملاً سفارشی (بدون فرم ذخیره Mino Option) |
 | `template` + `template_base` | string | قالب PHP امن داخل base |
 
 ---
@@ -262,7 +262,7 @@ Aliasهای پشتیبانی‌شده: `page_title`, `page_slug`, `page_capabili
 | `select` / `radio` / `buttonset` | string | allowlist روی `options` |
 | `multiselect` | string[] | |
 | `color` | `#rrggbb` یا `''` | |
-| `image` / `media` | int (attachment ID) | URL با `asf_attachment_url()` |
+| `image` / `media` | int (attachment ID) | URL با `mino_attachment_url()` |
 | `gallery` | int[] | |
 | `editor` / `tinymce` / `richtext` | HTML (kses) | داخل repeater توصیه نمی‌شود |
 | `repeater` | array of rows | زیرفیلد در `fields` |
@@ -277,17 +277,17 @@ Aliasهای پشتیبانی‌شده: `page_title`, `page_slug`, `page_capabili
 
 ```php
 // یک فیلد
-$enabled = asf_get_option( 'my_plugin_settings', 'enable_feature', false );
+$enabled = mino_get_option( 'my_plugin_settings', 'enable_feature', false );
 
 // همه فیلدها (با defaults مر‌ج‌شده)
-$all = asf_get_options( 'my_plugin_settings' );
+$all = mino_get_options( 'my_plugin_settings' );
 
 // تصویر
-$logo_id  = (int) asf_get_option( 'my_plugin_settings', 'logo', 0 );
-$logo_url = asf_attachment_url( $logo_id, 'full' );
+$logo_id  = (int) mino_get_option( 'my_plugin_settings', 'logo', 0 );
+$logo_url = mino_attachment_url( $logo_id, 'full' );
 
 // ریپیتر
-$rows = asf_get_option( 'my_plugin_settings', 'social_networks', [] );
+$rows = mino_get_option( 'my_plugin_settings', 'social_networks', [] );
 if ( is_array( $rows ) ) {
 	foreach ( $rows as $row ) {
 		$name = isset( $row['network_name'] ) ? (string) $row['network_name'] : '';
@@ -392,14 +392,14 @@ Settings::register_tab( 'my_plugin_settings', [
 
 ## ۱۳) ذخیره / ریست (رفتار runtime)
 
-- ذخیره و ریست از UI با **AJAX** (`admin-ajax.php` → `asf_save_settings`) انجام می‌شود.
+- ذخیره و ریست از UI با **AJAX** (`admin-ajax.php` → `mino_save_settings`) انجام می‌شود.
 - هنگام ذخیره: کل باکس تنظیمات overlay شیشه‌ای + لودر + غیرفعال می‌شود.
 - بدون JS: POST کلاسیک همچنان کار می‌کند (fallback).
-- شما معمولاً نیازی به نوشتن کد ذخیره ندارید؛ ASF انجام می‌دهد.
-- برای مشاهدهٔ موفقیت ذخیره: هوک `asf_saved`.
+- شما معمولاً نیازی به نوشتن کد ذخیره ندارید؛ Mino Option انجام می‌دهد.
+- برای مشاهدهٔ موفقیت ذخیره: هوک `mino_saved`.
 
 ```php
-add_action( 'asf_saved', static function ( array $values, string $page_id ) {
+add_action( 'mino_saved', static function ( array $values, string $page_id ) {
 	if ( 'my_plugin_settings' !== $page_id ) {
 		return;
 	}
@@ -414,8 +414,8 @@ add_action( 'asf_saved', static function ( array $values, string $page_id ) {
 ### فیلد سفارشی
 
 ```php
-use Arash\SettingsFramework\Fields\AbstractField;
-use Arash\SettingsFramework\Settings;
+use Mino\Option\Fields\AbstractField;
+use Mino\Option\Settings;
 
 final class MySlugField extends AbstractField {
 	public static function type(): string { return 'slug'; }
@@ -426,7 +426,7 @@ final class MySlugField extends AbstractField {
 
 	public function render( array $field, $value, array $context ): void {
 		printf(
-			'<input type="text" class="asf-input" id="%1$s" name="%2$s" value="%3$s" />',
+			'<input type="text" class="mino-input" id="%1$s" name="%2$s" value="%3$s" />',
 			esc_attr( $context['id'] ),
 			esc_attr( $context['name'] ),
 			esc_attr( (string) $value )
@@ -441,14 +441,14 @@ Settings::register_field_type( 'slug', MySlugField::class );
 
 | هوک | کاربرد |
 |-----|--------|
-| `asf_booted` | بعد از boot |
-| `asf_normalize_field` | تغییر کانفیگ فیلد |
-| `asf_sanitize_field` / `asf_sanitize_page` | sanitize |
-| `asf_validate_page` | خطاهای اعتبارسنجی |
-| `asf_pre_save_options` | قبل از `update_option` |
-| `asf_saved` / `asf_reset` | بعد از موفقیت |
-| `asf_render_field` | تغییر HTML رندر |
-| `asf_get_option` | فیلتر مقدار خوانده‌شده |
+| `mino_booted` | بعد از boot |
+| `mino_normalize_field` | تغییر کانفیگ فیلد |
+| `mino_sanitize_field` / `mino_sanitize_page` | sanitize |
+| `mino_validate_page` | خطاهای اعتبارسنجی |
+| `mino_pre_save_options` | قبل از `update_option` |
+| `mino_saved` / `mino_reset` | بعد از موفقیت |
+| `mino_render_field` | تغییر HTML رندر |
+| `mino_get_option` | فیلتر مقدار خوانده‌شده |
 
 لیست کامل: [extensibility.md](extensibility.md)
 
@@ -459,11 +459,11 @@ Settings::register_field_type( 'slug', MySlugField::class );
 - capability مناسب صفحه را ست کنید (`manage_options` یا `edit_theme_options`).
 - به فیلد `html` بدون `trusted` اعتماد نکنید.
 - callback/template فقط کد خودتان باشد.
-- خروجی فرانت را همیشه escape کنید حتی اگر از ASF آمده:
+- خروجی فرانت را همیشه escape کنید حتی اگر از Mino Option آمده:
 
 ```php
-echo esc_html( (string) asf_get_option( 'my_plugin_settings', 'site_name', '' ) );
-echo esc_url( (string) asf_get_option( 'my_plugin_settings', 'api_url', '' ) );
+echo esc_html( (string) mino_get_option( 'my_plugin_settings', 'site_name', '' ) );
+echo esc_url( (string) mino_get_option( 'my_plugin_settings', 'api_url', '' ) );
 ```
 
 جزئیات: [security.md](security.md)
@@ -476,7 +476,7 @@ echo esc_url( (string) asf_get_option( 'my_plugin_settings', 'api_url', '' ) );
 <?php
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Settings;
+use Mino\Option\Settings;
 
 const MY_OPT_PAGE = 'acme_settings';
 
@@ -521,15 +521,15 @@ Settings::register_tab( MY_OPT_PAGE, [
 
 // مصرف در منطق افزونه:
 add_action( 'init', static function () {
-	if ( ! asf_get_option( MY_OPT_PAGE, 'is_enabled', true ) ) {
+	if ( ! mino_get_option( MY_OPT_PAGE, 'is_enabled', true ) ) {
 		return;
 	}
-	$mode = asf_get_option( MY_OPT_PAGE, 'mode', 'sandbox' );
+	$mode = mino_get_option( MY_OPT_PAGE, 'mode', 'sandbox' );
 	// ...
 } );
 ```
 
-نمونهٔ غنی‌تر: `examples/asf-example-plugin/asf-example-plugin.php`
+نمونهٔ غنی‌تر: `examples/mino-example-plugin/mino-example-plugin.php`
 
 ---
 
@@ -539,23 +539,23 @@ add_action( 'init', static function () {
 
 ### گام‌ها
 
-1. بررسی کن ASF داخل پروژه هست یا باید باندل شود (`arash-settings-framework.php`).
+1. بررسی کن Mino Option داخل پروژه هست یا باید باندل شود (`mino-option.php`).
 2. یک فایل تنظیمات جدا بساز (مثلاً `includes/settings.php`)؛ core فریم‌ورک را ویرایش نکن.
 3. `register_page` با `id` یکتا و پایدار.
 4. تب‌ها را بر اساس دامنهٔ محصول جدا کن (General / Appearance / Integrations …).
 5. برای on/off از `switch` استفاده کن، نه select بله/خیر.
 6. فیلدهای وابسته را با `require` بساز.
 7. لیست‌های تکراری را با `repeater` بساز.
-8. خواندن مقدار را فقط با `asf_get_option` انجام بده.
+8. خواندن مقدار را فقط با `mino_get_option` انجام بده.
 9. تست ذهنی: duplicate id؟ capability؟ escape در فرانت؟
 
 ### ممنوع برای ایجنت
 
-- کپی‌کردن کلاس‌های Optionino یا فریم‌ورک دیگر داخل ASF
+- کپی‌کردن کلاس‌های Optionino یا فریم‌ورک دیگر داخل Mino Option
 - نوشتن SQL مستقیم برای تنظیمات
 - ذخیرهٔ secret در `default` که در UI همیشه دیده شود بدون نیاز
-- اضافه کردن React/Vue برای صفحهٔ تنظیمات ASF
-- لود کردن Tailwind CDN یا فونت ریموت برای UI ASF (فونت Peyda لوکال است)
+- اضافه کردن React/Vue برای صفحهٔ تنظیمات Mino Option
+- لود کردن Tailwind CDN یا فونت ریموت برای UI Mino Option (فونت Peyda لوکال است)
 
 ### خروجی مورد انتظار ایجنت
 
@@ -571,15 +571,15 @@ add_action( 'init', static function () {
 |------|-----------|-----|
 | منو نمی‌آید | class لود نشده / capability | `class_exists(Settings::class)` و نقش کاربر |
 | فیلد ذخیره نمی‌شود | id نامعتبر / type ناشناخته | الگوی id و type را چک کن |
-| default DB را پر کرده | اشتباه مفهومی شما | ASF default را روی register نمی‌نویسد |
+| default DB را پر کرده | اشتباه مفهومی شما | Mino Option default را روی register نمی‌نویسد |
 | مقدار `false` برنمی‌گردد | استفاده از `empty()` | مستقیم با `=== false` یا cast bool |
-| conflict نسخه | دو کپی major مختلف | `asf_loader_info()` و WP_DEBUG |
-| Add row کار نمی‌کند | JS لود نشده | فقط روی صفحه ASF enqueue می‌شود |
+| conflict نسخه | دو کپی major مختلف | `mino_loader_info()` و WP_DEBUG |
+| Add row کار نمی‌کند | JS لود نشده | فقط روی صفحه Mino Option enqueue می‌شود |
 
 تشخیص لودر:
 
 ```php
-$info = asf_loader_info();
+$info = mino_loader_info();
 // active / skipped / conflicts
 ```
 
@@ -598,8 +598,8 @@ $info = asf_loader_info();
 
 ## ۲۰) نسخه و سازگاری
 
-- نسخهٔ فعلی فریم‌ورک: ثابت `ASF_VERSION`
+- نسخهٔ فعلی فریم‌ورک: ثابت `MINO_VERSION`
 - سیاست چندنسخه: first loaded wins
 - API عمومی پایدار در major فعلی؛ breaking change فقط با major جدید
 
-اگر برای محصول تجاری باندل می‌کنید، کل پوشهٔ ASF را داخل افزونه کپی کنید و از مسیر نسبی `require_once` کنید.
+اگر برای محصول تجاری باندل می‌کنید، کل پوشهٔ Mino Option را داخل افزونه کپی کنید و از مسیر نسبی `require_once` کنید.

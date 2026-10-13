@@ -74,7 +74,7 @@ Unsupported properties are ignored. Invalid IDs throw during registration (surfa
 
 - **Sanitize:** attachment ID via `get_post` type check (invalid → `0`)
 - **Stored:** int
-- **Helper:** `asf_attachment_url( $id, $size )`
+- **Helper:** `mino_attachment_url( $id, $size )`
 - **Extras:** `library` (`image`, `all`, …)
 
 ## gallery

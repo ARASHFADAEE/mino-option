@@ -2,12 +2,12 @@
 /**
  * Trusted HTML field (non-persistent).
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Fields;
+namespace Mino\Option\Fields;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -37,7 +37,7 @@ final class HtmlField extends AbstractField {
 	 */
 	public function render( array $field, $value, array $context ): void {
 		$content = (string) ( $field['content'] ?? $field['description'] ?? '' );
-		echo '<div class="asf-html">';
+		echo '<div class="mino-html">';
 		if ( ! empty( $field['trusted'] ) ) {
 			// Intentionally unescaped — developers must opt in with trusted => true.
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

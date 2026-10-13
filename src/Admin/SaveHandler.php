@@ -2,27 +2,27 @@
 /**
  * Form save / reset handler (POST + AJAX).
  *
- * @package Arash\SettingsFramework
+ * @package Mino\Option
  */
 
 declare(strict_types=1);
 
-namespace Arash\SettingsFramework\Admin;
+namespace Mino\Option\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
-use Arash\SettingsFramework\Registry\PageRegistry;
-use Arash\SettingsFramework\Security\RequestGuard;
-use Arash\SettingsFramework\Storage\OptionStore;
-use Arash\SettingsFramework\Validation\Sanitizer;
-use Arash\SettingsFramework\Validation\Validator;
+use Mino\Option\Registry\PageRegistry;
+use Mino\Option\Security\RequestGuard;
+use Mino\Option\Storage\OptionStore;
+use Mino\Option\Validation\Sanitizer;
+use Mino\Option\Validation\Validator;
 
 /**
  * Processes settings writes via classic POST redirect or admin-ajax.
  */
 final class SaveHandler {
 
-	public const AJAX_ACTION = 'asf_save_settings';
+	public const AJAX_ACTION = 'mino_save_settings';
 
 	/**
 	 * Handle non-AJAX POST save/reset (progressive enhancement fallback).
@@ -32,17 +32,17 @@ final class SaveHandler {
 			return;
 		}
 
-		if ( empty( $_POST['asf_action'] ) || empty( $_POST['asf_page_id'] ) ) {
+		if ( empty( $_POST['mino_action'] ) || empty( $_POST['mino_page_id'] ) ) {
 			return;
 		}
 
 		// Prefer AJAX; allow classic submit only when JS marks the form.
-		if ( empty( $_POST['asf_no_js'] ) ) {
+		if ( empty( $_POST['mino_no_js'] ) ) {
 			// Still process classic posts for accessibility / no-JS users.
 		}
 
-		$page_id = sanitize_key( wp_unslash( (string) $_POST['asf_page_id'] ) );
-		$action  = sanitize_key( wp_unslash( (string) $_POST['asf_action'] ) );
+		$page_id = sanitize_key( wp_unslash( (string) $_POST['mino_page_id'] ) );
+		$action  = sanitize_key( wp_unslash( (string) $_POST['mino_action'] ) );
 
 		$result = self::process_request( $page_id, $action, $_POST );
 
@@ -71,15 +71,15 @@ final class SaveHandler {
 	 * AJAX endpoint for save / reset.
 	 */
 	public static function ajax_handle(): void {
-		$page_id = isset( $_POST['asf_page_id'] ) ? sanitize_key( wp_unslash( (string) $_POST['asf_page_id'] ) ) : '';
-		$action  = isset( $_POST['asf_action'] ) ? sanitize_key( wp_unslash( (string) $_POST['asf_action'] ) ) : 'save';
+		$page_id = isset( $_POST['mino_page_id'] ) ? sanitize_key( wp_unslash( (string) $_POST['mino_page_id'] ) ) : '';
+		$action  = isset( $_POST['mino_action'] ) ? sanitize_key( wp_unslash( (string) $_POST['mino_action'] ) ) : 'save';
 
 		$result = self::process_request( $page_id, $action, $_POST );
 
 		if ( empty( $result['ok'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => (string) ( $result['message'] ?? __( 'Save failed.', 'arash-settings-framework' ) ),
+					'message' => (string) ( $result['message'] ?? __( 'Save failed.', 'mino-option' ) ),
 					'errors'  => $result['errors'] ?? array(),
 				),
 				! empty( $result['http'] ) ? (int) $result['http'] : 400
@@ -88,7 +88,7 @@ final class SaveHandler {
 
 		wp_send_json_success(
 			array(
-				'message' => (string) ( $result['message'] ?? __( 'Settings saved.', 'arash-settings-framework' ) ),
+				'message' => (string) ( $result['message'] ?? __( 'Settings saved.', 'mino-option' ) ),
 				'action'  => $action,
 			)
 		);
@@ -106,7 +106,7 @@ final class SaveHandler {
 		if ( '' === $page_id || ! PageRegistry::instance()->has_page( $page_id ) ) {
 			return array(
 				'ok'      => false,
-				'message' => __( 'Invalid settings page.', 'arash-settings-framework' ),
+				'message' => __( 'Invalid settings page.', 'mino-option' ),
 				'http'    => 400,
 			);
 		}
@@ -114,7 +114,7 @@ final class SaveHandler {
 		if ( ! RequestGuard::authorize_write( $page_id ) ) {
 			return array(
 				'ok'      => false,
-				'message' => __( 'You are not allowed to save these settings.', 'arash-settings-framework' ),
+				'message' => __( 'You are not allowed to save these settings.', 'mino-option' ),
 				'http'    => 403,
 			);
 		}
@@ -123,20 +123,20 @@ final class SaveHandler {
 			OptionStore::instance()->reset( $page_id );
 			return array(
 				'ok'      => true,
-				'message' => __( 'Settings reset to defaults.', 'arash-settings-framework' ),
+				'message' => __( 'Settings reset to defaults.', 'mino-option' ),
 			);
 		}
 
 		if ( 'save' !== $action ) {
 			return array(
 				'ok'      => false,
-				'message' => __( 'Unknown action.', 'arash-settings-framework' ),
+				'message' => __( 'Unknown action.', 'mino-option' ),
 				'http'    => 400,
 			);
 		}
 
 		$raw = wp_unslash( $source );
-		unset( $raw['asf_action'], $raw['asf_page_id'], $raw['asf_nonce'], $raw['_wp_http_referer'], $raw['action'], $raw['asf_no_js'] );
+		unset( $raw['mino_action'], $raw['mino_page_id'], $raw['mino_nonce'], $raw['_wp_http_referer'], $raw['action'], $raw['mino_no_js'] );
 
 		$fields = PageRegistry::instance()->get_fields( $page_id );
 		foreach ( $fields as $fid => $field ) {
@@ -160,7 +160,7 @@ final class SaveHandler {
 		if ( ! empty( $errors ) ) {
 			return array(
 				'ok'      => false,
-				'message' => __( 'Please fix the errors and try again.', 'arash-settings-framework' ),
+				'message' => __( 'Please fix the errors and try again.', 'mino-option' ),
 				'errors'  => $errors,
 				'http'    => 422,
 			);
@@ -170,7 +170,7 @@ final class SaveHandler {
 
 		return array(
 			'ok'      => true,
-			'message' => __( 'Settings saved.', 'arash-settings-framework' ),
+			'message' => __( 'Settings saved.', 'mino-option' ),
 		);
 	}
 
@@ -178,7 +178,7 @@ final class SaveHandler {
 	 * @param string $page_id Page ID.
 	 */
 	public static function notice_key( string $page_id ): string {
-		return 'asf_notice_' . $page_id . '_' . get_current_user_id();
+		return 'mino_notice_' . $page_id . '_' . get_current_user_id();
 	}
 
 	/**
@@ -189,7 +189,7 @@ final class SaveHandler {
 		$url = add_query_arg(
 			array(
 				'page'       => $menu_slug,
-				'asf_status' => $status,
+				'mino_status' => $status,
 			),
 			admin_url( 'admin.php' )
 		);
