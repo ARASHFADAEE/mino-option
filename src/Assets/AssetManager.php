@@ -33,9 +33,16 @@ final class AssetManager {
 		$version = defined( 'ASF_VERSION' ) ? ASF_VERSION : '1.0.0';
 
 		wp_enqueue_style(
+			'asf-peyda',
+			ASF_URL . 'assets/fonts/peyda/fontiran.css',
+			array(),
+			$version
+		);
+
+		wp_enqueue_style(
 			'asf-admin',
 			ASF_URL . 'assets/css/admin.css',
-			array( 'dashicons' ),
+			array( 'dashicons', 'asf-peyda' ),
 			$version
 		);
 

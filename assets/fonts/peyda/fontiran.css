@@ -1,0 +1,13 @@
+/**
+ * Peyda Variable Webfont (local bundle).
+ * Scope usage via .asf-settings in admin.css.
+ */
+@font-face {
+	font-family: "PeydaWebVF";
+	src:
+		url("PeydaWebVF.woff2") format("woff2-variations"),
+		url("PeydaWebVF.woff") format("woff-variations");
+	font-weight: 100 950;
+	font-style: normal;
+	font-display: swap;
+}

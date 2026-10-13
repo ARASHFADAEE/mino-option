@@ -114,7 +114,12 @@
 			.wp-fake-menu { display: none; }
 		}
 	</style>
+	<link rel="stylesheet" href="../../assets/fonts/peyda/fontiran.css" />
 	<link rel="stylesheet" href="../../assets/css/admin.css" />
+	<style>
+		body, .preview-bar, .wp-fake-menu { font-family: "PeydaWebVF", Tahoma, sans-serif; }
+		.preview-bar button.is-on { background: #0f766e; border-color: #0d5f59; }
+	</style>
 </head>
 <body>
 	<div class="wp-fake-admin">
@@ -377,7 +382,34 @@
 														</div>
 													</div>
 												</div>
-												<template class="asf-repeater-template"></template>
+												<template class="asf-repeater-template">
+													<div class="asf-repeater-row" data-asf-repeater-row>
+														<div class="asf-repeater-row-header">
+															<button type="button" class="asf-repeater-handle button-link" aria-label="Drag">
+																<span class="dashicons dashicons-menu"></span>
+															</button>
+															<span class="asf-repeater-row-label">Item __i__</span>
+															<div class="asf-repeater-row-actions">
+																<button type="button" class="button-link asf-repeater-duplicate">Duplicate</button>
+																<button type="button" class="button-link asf-repeater-remove">Remove</button>
+															</div>
+														</div>
+														<div class="asf-repeater-row-body">
+															<div class="asf-field asf-field--text">
+																<label class="asf-field-label">نام شبکه</label>
+																<div class="asf-field-control">
+																	<input class="asf-input" name="social_networks[__i__][network_name]" value="" />
+																</div>
+															</div>
+															<div class="asf-field asf-field--url">
+																<label class="asf-field-label">URL</label>
+																<div class="asf-field-control">
+																	<input class="asf-input" name="social_networks[__i__][network_url]" value="" />
+																</div>
+															</div>
+														</div>
+													</div>
+												</template>
 												<div class="asf-repeater-toolbar">
 													<button type="button" class="button button-secondary asf-repeater-add">Add row</button>
 												</div>
